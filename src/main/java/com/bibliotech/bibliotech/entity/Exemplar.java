@@ -1,10 +1,17 @@
 package com.bibliotech.bibliotech.entity;
 
+import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
 import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-public class Exemplar {
+@Table(name = "tb_exemplar")
+public class Exemplar implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,8 +22,8 @@ public class Exemplar {
 
     private Integer anoPublicacao;
 
-    @Column(nullable = false, length = 10)
-    private String disponibilidade;
+    @Enumerated(EnumType.STRING)
+    private DisponibilidadeExemplar disponibilidade;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String capaImg;
@@ -28,11 +35,11 @@ public class Exemplar {
     private String idioma;
 
     @ManyToOne
-    @JoinColumn(name = "fk_id_livro", nullable = false)
+    @JoinColumn(name = "id_livro", nullable = false)
     private Livro livro;
 
     @ManyToOne
-    @JoinColumn(name = "fk_id_editora", nullable = false)
+    @JoinColumn(name = "id_editora", nullable = false)
     private Editora editora;
 
     @OneToMany(mappedBy = "exemplar", cascade = CascadeType.ALL)
@@ -62,11 +69,11 @@ public class Exemplar {
         this.anoPublicacao = anoPublicacao;
     }
 
-    public String getDisponibilidade() {
+    public DisponibilidadeExemplar getDisponibilidade() {
         return disponibilidade;
     }
 
-    public void setDisponibilidade(String disponibilidade) {
+    public void setDisponibilidade(DisponibilidadeExemplar disponibilidade) {
         this.disponibilidade = disponibilidade;
     }
 
@@ -114,7 +121,15 @@ public class Exemplar {
         return emprestimos;
     }
 
-    public void setEmprestimos(List<Emprestimo> emprestimos) {
-        this.emprestimos = emprestimos;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Exemplar exemplar = (Exemplar) o;
+        return Objects.equals(idExemplar, exemplar.idExemplar);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(idExemplar);
     }
 }

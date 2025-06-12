@@ -1,10 +1,16 @@
 package com.bibliotech.bibliotech.entity;
 
 import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-public class Editora {
+@Table(name = "tb_editora")
+public class Editora implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +42,15 @@ public class Editora {
         return exemplares;
     }
 
-    public void setExemplares(List<Exemplar> exemplares) {
-        this.exemplares = exemplares;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Editora editora = (Editora) o;
+        return Objects.equals(idEditora, editora.idEditora);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(idEditora);
     }
 }

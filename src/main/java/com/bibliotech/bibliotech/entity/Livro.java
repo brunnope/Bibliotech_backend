@@ -1,11 +1,17 @@
 package com.bibliotech.bibliotech.entity;
 
 import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-public class Livro {
+@Table(name = "tb_livro")
+public class Livro implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,7 +87,15 @@ public class Livro {
         return exemplares;
     }
 
-    public void setExemplares(List<Exemplar> exemplares) {
-        this.exemplares = exemplares;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Livro livro = (Livro) o;
+        return Objects.equals(idLivro, livro.idLivro);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(idLivro);
     }
 }

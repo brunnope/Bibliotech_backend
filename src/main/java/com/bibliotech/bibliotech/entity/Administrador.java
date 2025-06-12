@@ -2,8 +2,14 @@ package com.bibliotech.bibliotech.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 @Entity
-public class Administrador {
+@Table(name = "tb_administrador")
+public class Administrador implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,5 +54,17 @@ public class Administrador {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Administrador that = (Administrador) o;
+        return Objects.equals(idAdmin, that.idAdmin);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(idAdmin);
     }
 }

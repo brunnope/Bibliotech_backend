@@ -1,10 +1,16 @@
 package com.bibliotech.bibliotech.entity;
 
+import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
 import jakarta.persistence.*;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-public class Emprestimo {
+@Table(name = "tb_emprestimo")
+public class Emprestimo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,15 +24,15 @@ public class Emprestimo {
 
     private LocalDate dataDevolucao;
 
-    @Column(nullable = false, length = 20)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private StatusEmprestimo status;
 
     @ManyToOne
-    @JoinColumn(name = "fk_id_usuario", nullable = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "fk_id_exemplar", nullable = false)
+    @JoinColumn(name = "id_exemplar", nullable = false)
     private Exemplar exemplar;
 
     public Long getIdEmprestimo() {
@@ -61,11 +67,11 @@ public class Emprestimo {
         this.dataDevolucao = dataDevolucao;
     }
 
-    public String getStatus() {
+    public StatusEmprestimo getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusEmprestimo status) {
         this.status = status;
     }
 
@@ -83,5 +89,18 @@ public class Emprestimo {
 
     public void setExemplar(Exemplar exemplar) {
         this.exemplar = exemplar;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Emprestimo that = (Emprestimo) o;
+        return idEmprestimo.equals(that.idEmprestimo);
+    }
+
+    @Override
+    public int hashCode() {
+        return idEmprestimo.hashCode();
     }
 }

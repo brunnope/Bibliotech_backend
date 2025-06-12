@@ -1,10 +1,19 @@
 package com.bibliotech.bibliotech.entity;
 
+import com.bibliotech.bibliotech.entity.enums.TipoUsuario;
 import jakarta.persistence.*;
+import org.hibernate.annotations.processing.Pattern;
+
+import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
+
 
 @Entity
-public class Usuario {
+@Table(name = "tb_usuario")
+public class Usuario implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +31,8 @@ public class Usuario {
     @Column(nullable = false, length = 255)
     private String senha;
 
-    @Column(nullable = false, length = 10)
-    private String tipo;
+    @Enumerated(EnumType.STRING)
+    private TipoUsuario tipo;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Emprestimo> emprestimos;
@@ -68,11 +77,11 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public String getTipo() {
+    public TipoUsuario getTipo() {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
+    public void setTipo(TipoUsuario tipo) {
         this.tipo = tipo;
     }
 
@@ -80,7 +89,15 @@ public class Usuario {
         return emprestimos;
     }
 
-    public void setEmprestimos(List<Emprestimo> emprestimos) {
-        this.emprestimos = emprestimos;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(idUsuario, usuario.idUsuario);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(idUsuario);
     }
 }
