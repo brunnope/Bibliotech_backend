@@ -1,0 +1,87 @@
+package com.bibliotech.bibliotech.entity;
+
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
+
+@Entity
+public class Livro {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idLivro;
+
+    @Column(nullable = false, length = 255)
+    private String titulo;
+
+    @Column(nullable = false, length = 255)
+    private String autor;
+
+    @Column(nullable = false, length = 100)
+    private String categoria;
+
+    @Column(unique = true, length = 20)
+    private String isbn;
+
+    @Column(nullable = false)
+    private LocalDate dataCadastro;
+
+    @OneToMany(mappedBy = "livro", cascade = CascadeType.ALL)
+    private List<Exemplar> exemplares;
+
+    public Long getIdLivro() {
+        return idLivro;
+    }
+
+    public void setIdLivro(Long idLivro) {
+        this.idLivro = idLivro;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public LocalDate getDataCadastro() {
+        return dataCadastro;
+    }
+
+    public void setDataCadastro(LocalDate dataCadastro) {
+        this.dataCadastro = dataCadastro;
+    }
+
+    public List<Exemplar> getExemplares() {
+        return exemplares;
+    }
+
+    public void setExemplares(List<Exemplar> exemplares) {
+        this.exemplares = exemplares;
+    }
+}
