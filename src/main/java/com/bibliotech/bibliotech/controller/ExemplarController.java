@@ -1,7 +1,7 @@
 package com.bibliotech.bibliotech.controller;
 
 import com.bibliotech.bibliotech.entity.Exemplar;
-import com.bibliotech.bibliotech.services.ExemplarService;
+import com.bibliotech.bibliotech.service.ExemplarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +23,8 @@ public class ExemplarController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Exemplar> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok().body(exemplarService.buscarExemplarPorId(id));
+    public ResponseEntity<Exemplar> obterExemplar(@PathVariable Long id) {
+        return ResponseEntity.ok().body(exemplarService.obterExemplar(id));
     }
 
     @PostMapping

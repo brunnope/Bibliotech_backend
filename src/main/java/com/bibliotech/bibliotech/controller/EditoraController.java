@@ -1,7 +1,7 @@
 package com.bibliotech.bibliotech.controller;
 
 import com.bibliotech.bibliotech.entity.Editora;
-import com.bibliotech.bibliotech.services.EditoraService;
+import com.bibliotech.bibliotech.service.EditoraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ public class EditoraController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Editora> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok().body(editoraService.buscarEditoraPorId(id));
+        return ResponseEntity.ok().body(editoraService.obterEditora(id));
     }
 
     @PostMapping
