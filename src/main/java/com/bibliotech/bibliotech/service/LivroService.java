@@ -1,6 +1,6 @@
 package com.bibliotech.bibliotech.service;
 
-import com.bibliotech.bibliotech.model.entity.Livro;
+import com.bibliotech.bibliotech.entity.Livro;
 import com.bibliotech.bibliotech.repository.LivroRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import java.util.List;

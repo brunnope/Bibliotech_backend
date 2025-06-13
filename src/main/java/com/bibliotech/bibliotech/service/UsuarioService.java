@@ -1,6 +1,6 @@
 package com.bibliotech.bibliotech.service;
 
-import com.bibliotech.bibliotech.model.entity.Usuario;
+import com.bibliotech.bibliotech.entity.Usuario;
 import com.bibliotech.bibliotech.repository.UsuarioRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;

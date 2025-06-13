@@ -1,6 +1,6 @@
 package com.bibliotech.bibliotech.controller;
 
-import com.bibliotech.bibliotech.model.entity.Emprestimo;
+import com.bibliotech.bibliotech.entity.Emprestimo;
 import com.bibliotech.bibliotech.service.EmprestimoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

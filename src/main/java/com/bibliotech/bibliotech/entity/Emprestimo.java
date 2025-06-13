@@ -1,6 +1,6 @@
-package com.bibliotech.bibliotech.model.entity;
+package com.bibliotech.bibliotech.entity;
 
-import com.bibliotech.bibliotech.model.entity.enums.StatusEmprestimo;
+import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
 import jakarta.persistence.*;
 
 import java.io.Serializable;

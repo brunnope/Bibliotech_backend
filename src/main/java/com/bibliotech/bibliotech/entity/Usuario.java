@@ -1,6 +1,6 @@
-package com.bibliotech.bibliotech.model.entity;
+package com.bibliotech.bibliotech.entity;
 
-import com.bibliotech.bibliotech.model.entity.enums.TipoUsuario;
+import com.bibliotech.bibliotech.entity.enums.TipoUsuario;
 import jakarta.persistence.*;
 
 import java.io.Serializable;

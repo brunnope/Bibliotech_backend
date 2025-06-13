@@ -1,6 +1,6 @@
 package com.bibliotech.bibliotech.service;
 
-import com.bibliotech.bibliotech.model.entity.Emprestimo;
+import com.bibliotech.bibliotech.entity.Emprestimo;
 import com.bibliotech.bibliotech.repository.EmprestimoRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
