@@ -17,7 +17,7 @@ public class LivroService {
         return livroRepository.findAll();
     }
 
-    public Livro buscarLivroPorId(Long id) {
+    public Livro obterLivro(Long id) {
         return livroRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
@@ -25,7 +25,7 @@ public class LivroService {
         return livroRepository.save(livro);
     }
 
-    public Livro atualizar(Long id, Livro livro) {
+    public Livro atualizarLivro(Long id, Livro livro) {
         Livro entity = livroRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         updateData(entity, livro);
         return livroRepository.save(entity);

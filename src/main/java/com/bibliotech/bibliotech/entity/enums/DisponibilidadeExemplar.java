@@ -1,4 +1,4 @@
-package com.bibliotech.bibliotech.model.entity.enums;
+package com.bibliotech.bibliotech.entity.enums;
 
 public enum DisponibilidadeExemplar {
     DISPONIVEL,

@@ -1,6 +1,7 @@
 package com.bibliotech.bibliotech.controller;
 
 import com.bibliotech.bibliotech.entity.Livro;
+import com.bibliotech.bibliotech.service.LivroService;
 import com.bibliotech.bibliotech.services.LivroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class LivroController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Livro> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok().body(livroService.buscarLivroPorId(id));
+    public ResponseEntity<Livro> obterLivro(@PathVariable Long id) {
+        return ResponseEntity.ok().body(livroService.obterLivro(id));
     }
 
     @PostMapping
