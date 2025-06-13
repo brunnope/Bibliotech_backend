@@ -1,6 +1,6 @@
 package com.bibliotech.bibliotech.controller;
 
-import com.bibliotech.bibliotech.entity.Livro;
+import com.bibliotech.bibliotech.model.entity.Livro;
 import com.bibliotech.bibliotech.service.LivroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

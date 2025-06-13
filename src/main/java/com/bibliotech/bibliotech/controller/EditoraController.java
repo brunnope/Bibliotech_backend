@@ -1,6 +1,6 @@
 package com.bibliotech.bibliotech.controller;
 
-import com.bibliotech.bibliotech.entity.Editora;
+import com.bibliotech.bibliotech.model.entity.Editora;
 import com.bibliotech.bibliotech.service.EditoraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
