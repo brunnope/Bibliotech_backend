@@ -1,6 +1,6 @@
 package com.bibliotech.bibliotech.service;
 
-import com.bibliotech.bibliotech.entity.Editora;
+import com.bibliotech.bibliotech.model.entity.Editora;
 import com.bibliotech.bibliotech.repository.EditoraRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

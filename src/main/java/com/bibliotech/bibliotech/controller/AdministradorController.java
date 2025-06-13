@@ -1,9 +1,7 @@
 package com.bibliotech.bibliotech.controller;
 
-import com.bibliotech.bibliotech.entity.Administrador;
-import com.bibliotech.bibliotech.entity.Livro;
+import com.bibliotech.bibliotech.model.entity.Administrador;
 import com.bibliotech.bibliotech.service.AdministradorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;

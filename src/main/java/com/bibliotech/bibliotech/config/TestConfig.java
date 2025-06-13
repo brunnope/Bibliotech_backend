@@ -1,9 +1,9 @@
 package com.bibliotech.bibliotech.config;
 
-import com.bibliotech.bibliotech.entity.Editora;
-import com.bibliotech.bibliotech.entity.Exemplar;
-import com.bibliotech.bibliotech.entity.Livro;
-import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
+import com.bibliotech.bibliotech.model.entity.Editora;
+import com.bibliotech.bibliotech.model.entity.Exemplar;
+import com.bibliotech.bibliotech.model.entity.Livro;
+import com.bibliotech.bibliotech.model.entity.enums.DisponibilidadeExemplar;
 import com.bibliotech.bibliotech.repository.EditoraRepository;
 import com.bibliotech.bibliotech.repository.ExemplarRepository;
 import com.bibliotech.bibliotech.repository.LivroRepository;
@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 
 @Configuration
 @Profile("test")

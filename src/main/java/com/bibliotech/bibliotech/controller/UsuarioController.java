@@ -1,8 +1,7 @@
 package com.bibliotech.bibliotech.controller;
 
-import com.bibliotech.bibliotech.entity.Usuario;
+import com.bibliotech.bibliotech.model.entity.Usuario;
 import com.bibliotech.bibliotech.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
