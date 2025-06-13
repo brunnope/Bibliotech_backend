@@ -15,8 +15,10 @@ import java.util.List;
 @RequestMapping("/administradores")
 public class AdministradorController {
 
-    @Autowired
-    private AdministradorService administradorService;
+    private final AdministradorService administradorService;
+    public AdministradorController(AdministradorService administradorService) {
+        this.administradorService = administradorService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Administrador>> listarAdiministradores() {
@@ -30,7 +32,7 @@ public class AdministradorController {
     }
 
     @PostMapping
-    public Administrador salvar(@RequestBody Administrador administrador) {
+    public ResponseEntity<Administrador> salvar(@RequestBody Administrador administrador) {
         administrador = administradorService.salvarAdministrador(administrador);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(administrador.getIdAdmin()).toUri();
