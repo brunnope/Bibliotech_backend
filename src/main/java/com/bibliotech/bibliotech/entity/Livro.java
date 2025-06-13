@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,7 +34,19 @@ public class Livro implements Serializable {
     private LocalDate dataCadastro;
 
     @OneToMany(mappedBy = "livro", cascade = CascadeType.ALL)
-    private List<Exemplar> exemplares;
+    private List<Exemplar> exemplares = new ArrayList<>();
+
+    public Livro(String titulo, String autor, String categoria, String isbn, LocalDate dataCadastro) {
+        this.titulo = titulo;
+        this.autor = autor;
+        this.categoria = categoria;
+        this.isbn = isbn;
+        this.dataCadastro = dataCadastro;
+    }
+
+    public Livro() {
+
+    }
 
     public Long getIdLivro() {
         return idLivro;

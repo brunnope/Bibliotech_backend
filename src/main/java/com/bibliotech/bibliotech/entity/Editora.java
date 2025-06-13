@@ -3,6 +3,7 @@ package com.bibliotech.bibliotech.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,7 +21,14 @@ public class Editora implements Serializable {
     private String nome;
 
     @OneToMany(mappedBy = "editora", cascade = CascadeType.ALL)
-    private List<Exemplar> exemplares;
+    private List<Exemplar> exemplares = new ArrayList<>();
+
+    public Editora(String nome) {
+        this.nome = nome;
+    }
+
+    public Editora() {
+    }
 
     public Long getIdEditora() {
         return idEditora;

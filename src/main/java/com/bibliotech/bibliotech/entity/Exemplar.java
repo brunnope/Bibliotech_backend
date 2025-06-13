@@ -4,6 +4,7 @@ import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,7 +44,23 @@ public class Exemplar implements Serializable {
     private Editora editora;
 
     @OneToMany(mappedBy = "exemplar", cascade = CascadeType.ALL)
-    private List<Emprestimo> emprestimos;
+    private List<Emprestimo> emprestimos = new ArrayList<>();
+
+    public Exemplar(Integer numExemplar, Integer anoPublicacao, DisponibilidadeExemplar disponibilidade,
+                    String capaImg, String contracapaImg, String idioma, Livro livro, Editora editora) {
+        this.numExemplar = numExemplar;
+        this.anoPublicacao = anoPublicacao;
+        this.disponibilidade = disponibilidade;
+        this.capaImg = capaImg;
+        this.contracapaImg = contracapaImg;
+        this.idioma = idioma;
+        this.livro = livro;
+        this.editora = editora;
+    }
+
+    public Exemplar() {
+
+    }
 
     public Long getIdExemplar() {
         return idExemplar;
