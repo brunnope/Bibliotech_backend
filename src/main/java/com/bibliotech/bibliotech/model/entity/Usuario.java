@@ -1,8 +1,7 @@
-package com.bibliotech.bibliotech.entity;
+package com.bibliotech.bibliotech.model.entity;
 
-import com.bibliotech.bibliotech.entity.enums.TipoUsuario;
+import com.bibliotech.bibliotech.model.entity.enums.TipoUsuario;
 import jakarta.persistence.*;
-import org.hibernate.annotations.processing.Pattern;
 
 import java.io.Serializable;
 import java.util.List;
