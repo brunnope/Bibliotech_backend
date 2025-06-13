@@ -30,7 +30,7 @@ public class AdministradorController {
     }
 
     @PostMapping
-    public Administrador salvar(@RequestBody Administrador administrador) {
+    public ResponseEntity<Administrador> salvar(@RequestBody Administrador administrador) {
         administrador = administradorService.salvarAdministrador(administrador);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(administrador.getIdAdmin()).toUri();

@@ -1,6 +1,7 @@
 package com.bibliotech.bibliotech.entity;
 
 import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -36,6 +37,7 @@ public class Exemplar implements Serializable {
     private String idioma;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_livro", nullable = false)
     private Livro livro;
 

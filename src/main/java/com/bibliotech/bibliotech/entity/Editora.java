@@ -1,5 +1,6 @@
 package com.bibliotech.bibliotech.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -20,6 +21,7 @@ public class Editora implements Serializable {
     @Column(nullable = false, length = 100)
     private String nome;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "editora", cascade = CascadeType.ALL)
     private List<Exemplar> exemplares = new ArrayList<>();
 
