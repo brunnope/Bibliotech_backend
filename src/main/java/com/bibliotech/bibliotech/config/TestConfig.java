@@ -1,12 +1,8 @@
 package com.bibliotech.bibliotech.config;
 
-import com.bibliotech.bibliotech.entity.Editora;
-import com.bibliotech.bibliotech.entity.Exemplar;
-import com.bibliotech.bibliotech.entity.Livro;
+import com.bibliotech.bibliotech.entity.*;
 import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
-import com.bibliotech.bibliotech.repository.EditoraRepository;
-import com.bibliotech.bibliotech.repository.ExemplarRepository;
-import com.bibliotech.bibliotech.repository.LivroRepository;
+import com.bibliotech.bibliotech.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -25,8 +21,14 @@ public class TestConfig implements CommandLineRunner {
     private EditoraRepository editoraRepository;
     
     @Autowired        
-    private ExemplarRepository exemplarRepository;    
-            
+    private ExemplarRepository exemplarRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -65,5 +67,21 @@ public class TestConfig implements CommandLineRunner {
         //Salva o Livro e os Exemplares (cascade no Livro persiste os Exemplares)
         livroRepository.save(livro);
 
+        // Adicionando ROLE ADMINISTRADOR
+        Role roleAdmin = new Role();
+        roleAdmin.setRole("ADMINISTRADOR");
+        roleAdmin = roleRepository.save(roleAdmin); // Salva no banco
+
+        // Criando usuário com ROLE ADMINISTRADOR
+        Usuario usuario = new Usuario();
+        usuario.setNome("Usuário Admin");
+        usuario.setEmail("admin@exemplo.com");
+        usuario.setSenha("senha123");
+        usuario.setMatricula("12345678");
+        usuario.getRoles().add(roleAdmin);
+        usuarioRepository.save(usuario);
+
+        System.out.println("Usuário criado: " + usuario.getNome() + " com papel: " + roleAdmin.getRole());
     }
+
 }

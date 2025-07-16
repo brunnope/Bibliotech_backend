@@ -45,6 +45,5 @@ public class UsuarioService {
         usuario.setNome(obj.getNome());
         usuario.setEmail(obj.getEmail());
         usuario.setSenha(obj.getSenha());
-        usuario.setTipo(obj.getTipo());
     }
 }

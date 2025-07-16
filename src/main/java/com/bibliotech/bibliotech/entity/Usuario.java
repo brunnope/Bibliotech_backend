@@ -1,11 +1,12 @@
 package com.bibliotech.bibliotech.entity;
 
-import com.bibliotech.bibliotech.entity.enums.TipoUsuario;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
@@ -30,11 +31,16 @@ public class Usuario implements Serializable {
     @Column(nullable = false, length = 255)
     private String senha;
 
-    @Enumerated(EnumType.STRING)
-    private TipoUsuario tipo;
-
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Emprestimo> emprestimos;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tb_usuario_role",
+            joinColumns = @JoinColumn(name = "id_usuario"),
+            inverseJoinColumns = @JoinColumn(name = "id_role")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     public Long getIdUsuario() {
         return idUsuario;
@@ -76,16 +82,12 @@ public class Usuario implements Serializable {
         this.senha = senha;
     }
 
-    public TipoUsuario getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoUsuario tipo) {
-        this.tipo = tipo;
-    }
-
     public List<Emprestimo> getEmprestimos() {
         return emprestimos;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
     }
 
     @Override
