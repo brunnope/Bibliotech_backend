@@ -4,6 +4,7 @@ import com.bibliotech.bibliotech.entity.dto.LivroDTO;
 import com.bibliotech.bibliotech.entity.Livro;
 import com.bibliotech.bibliotech.mapper.LivroMapper;
 import com.bibliotech.bibliotech.repository.LivroRepository;
+import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class LivroService {
 
     public LivroDTO obterLivro(Long id) {
         Livro livro = livroRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
         return livroMapper.toDTO(livro);
     }
 
@@ -37,7 +38,7 @@ public class LivroService {
 
     public LivroDTO atualizarLivro(Long id, LivroDTO livroDTO) {
         Livro livroExistente = livroRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
 
         // Atualiza os campos do livro com os dados do DTO
         livroExistente.setTitulo(livroDTO.getTitulo());
@@ -52,7 +53,7 @@ public class LivroService {
 
     public void excluirLivro(Long id) {
         Livro livro = livroRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Livro não encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException(id));
         livroRepository.delete(livro);
     }
 }

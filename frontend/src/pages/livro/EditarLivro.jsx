@@ -13,6 +13,9 @@ function EditarLivro() {
     const ISBN = useRef();
     const dataCadastro = useRef();
 
+    const hoje = new Date();
+    const dataMax = hoje.toLocaleDateString('en-CA');
+
     useEffect(() => {
         async function fetchLivro() {
             const response = await api.get(`/livros/${id}`);
@@ -52,7 +55,7 @@ function EditarLivro() {
                 <input placeholder="Autor" type="text" ref={autor} />
                 <input placeholder="Categoria" type="text" ref={categoria} />
                 <input placeholder="ISBN" type="text" ref={ISBN} />
-                <input placeholder="Data de Cadastro" type="date" ref={dataCadastro} />
+                <input placeholder="Data de Cadastro" type="date" ref={dataCadastro}  max={dataMax}/>
 
                 <button type="button" onClick={atualizarLivro}>
                     Atualizar

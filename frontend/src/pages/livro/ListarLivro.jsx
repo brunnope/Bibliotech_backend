@@ -4,7 +4,6 @@ import "./ListarLivros.css";
 import Lixeira from "../../assets/lixeira.png";
 import Editar from "../../assets/editar.png";
 import api from "../../services/api";
-import editarLivro from "./EditarLivro.jsx";
 
 function ListarLivro() {
   const [livros, setLivros] = useState([]);
