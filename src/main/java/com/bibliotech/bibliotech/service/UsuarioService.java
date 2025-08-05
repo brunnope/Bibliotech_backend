@@ -6,6 +6,7 @@ import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -38,6 +39,11 @@ public class UsuarioService {
 
     public void excluirUsuario(Long id) {
         usuarioRepository.deleteById(id);
+    }
+
+
+    public Usuario buscarPorEmailOuMatricula(String identificador) {
+        return usuarioRepository.findByEmailOrMatricula(identificador);
     }
 
     private void updateData(Usuario usuario, Usuario obj) {

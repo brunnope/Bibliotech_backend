@@ -1,5 +1,6 @@
 package com.bibliotech.bibliotech.controller;
 
+import com.bibliotech.bibliotech.entity.Livro;
 import com.bibliotech.bibliotech.entity.dto.LivroDTO;
 import com.bibliotech.bibliotech.service.LivroService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,17 @@ public class LivroController {
     public ResponseEntity<LivroDTO> obterLivro(@PathVariable Long id) {
         return ResponseEntity.ok().body(livroService.obterLivro(id));
     }
+
+    @GetMapping("/ultimo")
+    public ResponseEntity<LivroDTO> obterUltimoLivro() {
+        return ResponseEntity.ok().body(livroService.ultimoLivro());
+    }
+
+    @GetMapping("/categorias")
+    public ResponseEntity<List<String>> listarCategorias() {
+        return ResponseEntity.ok().body(livroService.listarCategorias());
+    }
+
 
     @PostMapping
     public ResponseEntity<LivroDTO> salvar(@RequestBody LivroDTO livroDTO) {

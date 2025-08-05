@@ -30,6 +30,15 @@ public class LivroService {
         return livroMapper.toDTO(livro);
     }
 
+    public LivroDTO ultimoLivro() {
+        Livro livro = livroRepository.ultimoLivro();
+        return livroMapper.toDTO(livro);
+    }
+
+    public List<String> listarCategorias() {
+        return livroRepository.listarCategorias();
+    }
+
     public LivroDTO salvarLivro(LivroDTO livroDTO) {
         Livro livro = livroMapper.toEntity(livroDTO);
         livro = livroRepository.save(livro);

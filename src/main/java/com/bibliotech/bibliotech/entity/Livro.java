@@ -27,7 +27,7 @@ public class Livro implements Serializable {
     @Column(nullable = false, length = 100)
     private String categoria;
 
-    @Column(unique = true, length = 20)
+    @Column(unique = true, nullable = false, length = 13)
     private String isbn;
 
     @Column(nullable = false)

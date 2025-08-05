@@ -1,8 +1,12 @@
 package com.bibliotech.bibliotech.config;
 
+import com.bibliotech.bibliotech.controller.EmailController;
 import com.bibliotech.bibliotech.entity.*;
+import com.bibliotech.bibliotech.entity.dto.IdentificadorDTO;
 import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
 import com.bibliotech.bibliotech.repository.*;
+import com.bibliotech.bibliotech.service.notificacao.EmailService;
+import com.bibliotech.bibliotech.service.notificacao.Mensagem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -29,8 +33,13 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private EmailController emailController;
+
     @Override
     public void run(String... args) throws Exception {
+
+
 
         Editora editora = new Editora("Editora Exemplo");
         editora = editoraRepository.save(editora);
@@ -67,21 +76,35 @@ public class TestConfig implements CommandLineRunner {
         //Salva o Livro e os Exemplares (cascade no Livro persiste os Exemplares)
         livroRepository.save(livro);
 
-        // Adicionando ROLE ADMINISTRADOR
+        // Adicionando ROLE ADMINISTRADOR e USER
         Role roleAdmin = new Role();
         roleAdmin.setRole("ADMINISTRADOR");
         roleAdmin = roleRepository.save(roleAdmin); // Salva no banco
 
+        Role roleUser = new Role();
+        roleUser.setRole("USER");
+        roleUser = roleRepository.save(roleUser);
+
         // Criando usuário com ROLE ADMINISTRADOR
         Usuario usuario = new Usuario();
         usuario.setNome("Usuário Admin");
-        usuario.setEmail("admin@exemplo.com");
+        usuario.setEmail("cicero.brunno@academico.ifpb.edu.br");
         usuario.setSenha("senha123");
         usuario.setMatricula("12345678");
         usuario.getRoles().add(roleAdmin);
         usuarioRepository.save(usuario);
 
-        System.out.println("Usuário criado: " + usuario.getNome() + " com papel: " + roleAdmin.getRole());
+        // Criando usuário com ROLE USER
+        Usuario usuario2 = new Usuario();
+        usuario2.setNome("Usuário Aluno");
+        usuario2.setEmail("aluno@exemplo.com");
+        usuario2.setSenha("senha123");
+        usuario2.setMatricula("202315020028");
+        usuario2.getRoles().add(roleUser);
+        usuarioRepository.save(usuario2);
+
+        IdentificadorDTO identificadorDTO = new IdentificadorDTO("cicero.brunno@academico.ifpb.edu.br");
+        emailController.enviarSenha(identificadorDTO);
     }
 
 }
