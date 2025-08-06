@@ -2,6 +2,8 @@ package com.bibliotech.bibliotech.controller;
 
 import com.bibliotech.bibliotech.entity.Usuario;
 import com.bibliotech.bibliotech.entity.dto.IdentificadorDTO;
+import com.bibliotech.bibliotech.entity.dto.UsuarioComSenhaDTO;
+import com.bibliotech.bibliotech.entity.dto.UsuarioDTO;
 import com.bibliotech.bibliotech.service.UsuarioService;
 import com.bibliotech.bibliotech.service.notificacao.EmailService;
 import com.bibliotech.bibliotech.service.notificacao.Mensagem;
@@ -22,7 +24,7 @@ public class EmailController {
 
     @PostMapping("/enviar")
     public ResponseEntity<String> enviarSenha(@RequestBody IdentificadorDTO identificador) {
-        Usuario usuario = usuarioService.buscarPorEmailOuMatricula(identificador.getIdentificador());
+        UsuarioComSenhaDTO usuario = usuarioService.buscarPorEmailOuMatricula(identificador.getIdentificador());
         if (!(usuario == null)) {
             try {
                 Mensagem mensagem = new Mensagem(usuario.getEmail(), "Redefinição de senha - Bibliotech",
@@ -30,7 +32,7 @@ public class EmailController {
                 emailService.enviarEmail(mensagem);
                 return ResponseEntity.ok().body("Email enviado com sucesso!");
             } catch (Exception e) {
-                return ResponseEntity.badRequest().body("Erro ao enviar email: " + e.getMessage());
+                return ResponseEntity.badRequest().body("Erro ao enviar email. Tente novamente mais tarde!");
             }
         }
 

@@ -3,10 +3,8 @@ package com.bibliotech.bibliotech.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 
 @Entity
@@ -31,16 +29,15 @@ public class Usuario implements Serializable {
     @Column(nullable = false, length = 255)
     private String senha;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_role")
+    private Role role;
+
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Emprestimo> emprestimos;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "tb_usuario_role",
-            joinColumns = @JoinColumn(name = "id_usuario"),
-            inverseJoinColumns = @JoinColumn(name = "id_role")
-    )
-    private Set<Role> roles = new HashSet<>();
+
+
 
     public Long getIdUsuario() {
         return idUsuario;
@@ -86,9 +83,10 @@ public class Usuario implements Serializable {
         return emprestimos;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
+    public Role getRole() { return role; }
+
+    public void setRole(Role role) { this.role = role; }
+
 
     @Override
     public boolean equals(Object o) {
