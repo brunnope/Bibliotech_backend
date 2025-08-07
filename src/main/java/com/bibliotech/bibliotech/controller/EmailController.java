@@ -1,9 +1,7 @@
 package com.bibliotech.bibliotech.controller;
 
-import com.bibliotech.bibliotech.entity.Usuario;
 import com.bibliotech.bibliotech.entity.dto.IdentificadorDTO;
 import com.bibliotech.bibliotech.entity.dto.UsuarioComSenhaDTO;
-import com.bibliotech.bibliotech.entity.dto.UsuarioDTO;
 import com.bibliotech.bibliotech.service.UsuarioService;
 import com.bibliotech.bibliotech.service.notificacao.EmailService;
 import com.bibliotech.bibliotech.service.notificacao.Mensagem;

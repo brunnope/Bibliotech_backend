@@ -1,5 +1,6 @@
 package com.bibliotech.bibliotech.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -33,6 +34,7 @@ public class Livro implements Serializable {
     @Column(nullable = false)
     private LocalDate dataCadastro;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "livro", cascade = CascadeType.ALL)
     private List<Exemplar> exemplares = new ArrayList<>();
 

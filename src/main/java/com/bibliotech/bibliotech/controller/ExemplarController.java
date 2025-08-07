@@ -1,14 +1,15 @@
 package com.bibliotech.bibliotech.controller;
 
-import com.bibliotech.bibliotech.entity.Exemplar;
+import com.bibliotech.bibliotech.entity.dto.ExemplarDTO;
 import com.bibliotech.bibliotech.service.ExemplarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 @RestController
 @RequestMapping(value = "/exemplares")
@@ -18,27 +19,26 @@ public class ExemplarController {
     private ExemplarService exemplarService;
 
     @GetMapping
-    public ResponseEntity<List<Exemplar>> listarExemplares() {
+    public ResponseEntity<List<ExemplarDTO>> listarExemplares() {
         return ResponseEntity.ok().body(exemplarService.listarExemplares());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Exemplar> obterExemplar(@PathVariable Long id) {
+    public ResponseEntity<ExemplarDTO> obterExemplar(@PathVariable Long id) {
         return ResponseEntity.ok().body(exemplarService.obterExemplar(id));
     }
 
     @PostMapping
-    public ResponseEntity<Exemplar> salvar(@RequestBody Exemplar exemplar) {
-        exemplar = exemplarService.salvarExemplar(exemplar);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(exemplar.getIdExemplar()).toUri();
-        return ResponseEntity.created(uri).body(exemplar);
+    public ResponseEntity<ExemplarDTO> salvar(@RequestBody ExemplarDTO exemplarDTO) {
+        ExemplarDTO novoExemplar = exemplarService.salvarExemplar(exemplarDTO);
+        URI uri = fromCurrentRequest().path("/{id}")
+                .buildAndExpand(novoExemplar.getIdExemplar()).toUri();
+        return ResponseEntity.created(uri).body(novoExemplar);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Exemplar> atualizar(@PathVariable Long id, @RequestBody Exemplar exemplar) {
-        exemplar = exemplarService.atualizarExemplar(id, exemplar);
-        return ResponseEntity.ok().body(exemplar);
+    public ResponseEntity<ExemplarDTO> atualizar(@PathVariable Long id, @RequestBody ExemplarDTO exemplarDTO) {
+        return ResponseEntity.ok().body(exemplarService.atualizarExemplar(id, exemplarDTO));
     }
 
     @DeleteMapping("/{id}")

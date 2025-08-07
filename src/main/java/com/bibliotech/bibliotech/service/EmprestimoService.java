@@ -1,8 +1,11 @@
 package com.bibliotech.bibliotech.service;
 
 import com.bibliotech.bibliotech.entity.Emprestimo;
+import com.bibliotech.bibliotech.entity.dto.EmprestimoDTO;
+import com.bibliotech.bibliotech.mapper.EmprestimoMapper;
 import com.bibliotech.bibliotech.repository.EmprestimoRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,41 +13,53 @@ import java.util.List;
 @Service
 public class EmprestimoService {
 
-    private final EmprestimoRepository emprestimoRepository;
+    @Autowired
+    private EmprestimoRepository emprestimoRepository;
 
-    public EmprestimoService(EmprestimoRepository emprestimoRepository) {
-        this.emprestimoRepository = emprestimoRepository;
+    @Autowired
+    private EmprestimoMapper emprestimoMapper;
+
+    public List<EmprestimoDTO> listarEmprestimos() {
+        List<Emprestimo> emprestimos = emprestimoRepository.findAll();
+        return emprestimoMapper.toDTOList(emprestimos);
     }
 
-    public List<Emprestimo> listarEmprestimos() {
-        return emprestimoRepository.findAll();
+    public EmprestimoDTO obterEmprestimo(Long id) {
+        Emprestimo emprestimo = emprestimoRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(id)
+        );
+        return emprestimoMapper.toDTO(emprestimo);
     }
 
-    public Emprestimo obterEmprestimo(Long id) {
-        return emprestimoRepository.findById(id)
+    public EmprestimoDTO salvarEmprestimo(EmprestimoDTO emprestimoDTO) {
+        Emprestimo emprestimo = emprestimoMapper.toEntity(emprestimoDTO);
+        emprestimo = emprestimoRepository.save(emprestimo);
+        return emprestimoMapper.toDTO(emprestimo);
+    }
+
+
+    public EmprestimoDTO atualizarEmprestimo(Long id, EmprestimoDTO emprestimoAtualizado) {
+        Emprestimo emprestimoAtual
+                = emprestimoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
-    }
+        updateData(emprestimoAtual, emprestimoAtualizado);
+        emprestimoAtual = emprestimoRepository.save(emprestimoAtual);
+        return emprestimoMapper.toDTO(emprestimoAtual);
 
-    public Emprestimo salvarEmprestimo(Emprestimo emprestimo) {
-        return emprestimoRepository.save(emprestimo);
-    }
-
-    public Emprestimo atualizarEmprestimo(Long id, Emprestimo emprestimoAtualizado) {
-        Emprestimo entity = emprestimoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
-        updateData(entity, emprestimoAtualizado);
-        return emprestimoRepository.save(entity);
     }
 
     public void excluirEmprestimo(Long id) {
-        emprestimoRepository.deleteById(id);
+        Emprestimo emprestimo = emprestimoRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(id)
+        );
+        emprestimoRepository.delete(emprestimo);
     }
 
-    private void updateData(Emprestimo emprestimo, Emprestimo obj) {
+
+    private void updateData(Emprestimo emprestimo, EmprestimoDTO obj) {
         emprestimo.setDataEmprestimo(obj.getDataEmprestimo());
         emprestimo.setDataPrevistaDevolucao(obj.getDataPrevistaDevolucao());
         emprestimo.setDataDevolucao(obj.getDataDevolucao());
-        emprestimo.setStatus(obj.getStatus());
         emprestimo.setUsuario(obj.getUsuario());
         emprestimo.setExemplar(obj.getExemplar());
     }

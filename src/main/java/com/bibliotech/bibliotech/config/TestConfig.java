@@ -42,8 +42,6 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-
-
         Editora editora = new Editora("Editora Exemplo");
         editora = editoraRepository.save(editora);
 

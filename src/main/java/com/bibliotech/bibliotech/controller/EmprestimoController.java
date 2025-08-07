@@ -1,52 +1,51 @@
 package com.bibliotech.bibliotech.controller;
 
-import com.bibliotech.bibliotech.entity.Emprestimo;
+import com.bibliotech.bibliotech.entity.dto.EmprestimoDTO;
 import com.bibliotech.bibliotech.service.EmprestimoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
+
 @RestController
-@RequestMapping("/emprestimos")
+@RequestMapping(value = "/emprestimos")
 public class EmprestimoController {
 
-    private final EmprestimoService emprestimoService;
-
-    public EmprestimoController(EmprestimoService emprestimoService) {
-        this.emprestimoService = emprestimoService;
-    }
+    @Autowired
+    private EmprestimoService emprestimoService;
 
     @GetMapping
-    public ResponseEntity<List<Emprestimo>> listarEmprestimos() {
-        return ResponseEntity.ok().body(emprestimoService.listarEmprestimos());
+    public ResponseEntity<List<EmprestimoDTO>> listarEmprestimos() {
+        List<EmprestimoDTO> emprestimos = emprestimoService.listarEmprestimos();
+        return ResponseEntity.ok().body(emprestimos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Emprestimo> obterEmprestimo(@PathVariable Long id) {
-        return ResponseEntity.ok().body(emprestimoService.obterEmprestimo(id));
-    }
-
-    @PostMapping
-    public ResponseEntity<Emprestimo> salvar(@RequestBody Emprestimo emprestimo) {
-        emprestimo = emprestimoService.salvarEmprestimo(emprestimo);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(emprestimo.getIdEmprestimo())
-                .toUri();
-        return ResponseEntity.created(uri).body(emprestimo);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Emprestimo> atualizarEmprestimo(@PathVariable Long id, @RequestBody Emprestimo emprestimoAtualizado) {
-        Emprestimo emprestimo = emprestimoService.atualizarEmprestimo(id, emprestimoAtualizado);
+    public ResponseEntity<EmprestimoDTO> obterEmprestimo(@PathVariable Long id) {
+        EmprestimoDTO emprestimo = emprestimoService.obterEmprestimo(id);
         return ResponseEntity.ok().body(emprestimo);
     }
 
+    @PostMapping
+    public ResponseEntity<EmprestimoDTO> salvarEmprestimo(@RequestBody EmprestimoDTO emprestimoDTO) {
+        EmprestimoDTO novoEmprestimo = emprestimoService.salvarEmprestimo(emprestimoDTO);
+        URI uri = fromCurrentRequest().path("/{id}")
+                .buildAndExpand(novoEmprestimo.getIdEmprestimo()).toUri();
+        return ResponseEntity.created(uri).body(novoEmprestimo);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EmprestimoDTO> atualizarEmprestimo(@PathVariable Long id, @RequestBody EmprestimoDTO emprestimoDTO) {
+        EmprestimoDTO atualizado = emprestimoService.atualizarEmprestimo(id, emprestimoDTO);
+        return ResponseEntity.ok().body(atualizado);
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluirEmprestimo(@PathVariable Long id) {
         emprestimoService.excluirEmprestimo(id);
         return ResponseEntity.noContent().build();
     }

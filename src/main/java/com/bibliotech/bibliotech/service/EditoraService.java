@@ -1,6 +1,8 @@
 package com.bibliotech.bibliotech.service;
 
 import com.bibliotech.bibliotech.entity.Editora;
+import com.bibliotech.bibliotech.entity.dto.EditoraDTO;
+import com.bibliotech.bibliotech.mapper.EditoraMapper;
 import com.bibliotech.bibliotech.repository.EditoraRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,30 +16,41 @@ public class EditoraService {
     @Autowired
     private EditoraRepository editoraRepository;
 
-    public List<Editora> listarEditoras() {
-        return editoraRepository.findAll();
+    @Autowired
+    private EditoraMapper editoraMapper;
+
+    public List<EditoraDTO> listarEditoras() {
+        List<Editora> editoras = editoraRepository.findAll();
+        return editoraMapper.toDTOList(editoras);
     }
 
-    public Editora obterEditora(Long id) {
-        return editoraRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+    public EditoraDTO obterEditora(Long id) {
+        Editora editora = editoraRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(id)
+        );
+        return editoraMapper.toDTO(editora);
     }
 
-    public Editora salvarEditora(Editora editora) {
-        return editoraRepository.save(editora);
+    public EditoraDTO salvarEditora(EditoraDTO editoraDTO) {
+        Editora editora = editoraMapper.toEntity(editoraDTO);
+        editora = editoraRepository.save(editora);
+        return editoraMapper.toDTO(editora);
     }
 
-    public Editora atualizarEditora(Long id, Editora editora) {
-        Editora entity = editoraRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
-        updateData(entity, editora);
-        return editoraRepository.save(entity);
+    public EditoraDTO atualizarEditora(Long id, EditoraDTO editoraDTO) {
+        Editora editoraAtual = editoraRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(id)
+        );
+
+        editoraAtual.setNome(editoraDTO.getNome());
+        Editora editoraAtualizada = editoraRepository.save(editoraAtual);
+        return editoraMapper.toDTO(editoraAtualizada);
     }
 
-    public void excluir(Long id) {
-        editoraRepository.deleteById(id);
-    }
-
-    private void updateData(Editora entity, Editora obj) {
-        entity.setNome(obj.getNome());
+    public void excluirEditora(Long id) {
+        Editora editora = editoraRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(id)
+        );
+        editoraRepository.delete(editora);
     }
 }
-

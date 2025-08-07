@@ -1,6 +1,8 @@
 package com.bibliotech.bibliotech.service;
 
 import com.bibliotech.bibliotech.entity.Exemplar;
+import com.bibliotech.bibliotech.entity.dto.ExemplarDTO;
+import com.bibliotech.bibliotech.mapper.ExemplarMapper;
 import com.bibliotech.bibliotech.repository.ExemplarRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,36 +16,51 @@ public class ExemplarService {
     @Autowired
     private ExemplarRepository exemplarRepository;
 
-    public List<Exemplar> listarExemplares() {
-        return exemplarRepository.findAll();
+    @Autowired
+    private ExemplarMapper exemplarMapper;
+
+    public List<ExemplarDTO> listarExemplares() {
+        List<Exemplar> exemplares = exemplarRepository.findAll();
+        return exemplarMapper.toDTOList(exemplares);
     }
 
-    public Exemplar obterExemplar(Long id) {
-        return exemplarRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+    public ExemplarDTO obterExemplar(Long id) {
+        Exemplar exemplar = exemplarRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(id)
+        );
+        return exemplarMapper.toDTO(exemplar);
     }
 
-    public Exemplar salvarExemplar(Exemplar exemplar) {
-        return exemplarRepository.save(exemplar);
+    public ExemplarDTO salvarExemplar(ExemplarDTO exemplarDTO) {
+        Exemplar exemplar = exemplarMapper.toEntity(exemplarDTO);
+        exemplar = exemplarRepository.save(exemplar);
+        return exemplarMapper.toDTO(exemplar);
     }
 
-    public Exemplar atualizarExemplar(Long id, Exemplar exemplar) {
-        Exemplar entity = exemplarRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
-        updateData(entity, exemplar);
-        return exemplarRepository.save(entity);
+    public ExemplarDTO atualizarExemplar(Long id, ExemplarDTO exemplarDTO) {
+        Exemplar exemplarAtual = exemplarRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(id)
+        );
+
+        exemplarAtual.setNumExemplar(exemplarDTO.getNumExemplar());
+        exemplarAtual.setAnoPublicacao(exemplarDTO.getAnoPublicacao());
+        exemplarAtual.setDisponibilidade(exemplarDTO.getDisponibilidade());
+        exemplarAtual.setCapaImg(exemplarDTO.getCapaImg());
+        exemplarAtual.setContracapaImg(exemplarDTO.getContracapaImg());
+        exemplarAtual.setIdioma(exemplarDTO.getIdioma());
+        exemplarAtual.setLivro(exemplarDTO.getLivro());
+        exemplarAtual.setEditora(exemplarDTO.getEditora());
+
+        Exemplar exemplarAtualizado = exemplarRepository.save(exemplarAtual);
+        return exemplarMapper.toDTO(exemplarAtualizado);
     }
 
     public void excluirExemplar(Long id) {
-        exemplarRepository.deleteById(id);
+        Exemplar exemplar = exemplarRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(id)
+        );
+        exemplarRepository.delete(exemplar);
     }
 
-    private void updateData(Exemplar entity, Exemplar obj) {
-        entity.setNumExemplar(obj.getNumExemplar());
-        entity.setAnoPublicacao(obj.getAnoPublicacao());
-        entity.setDisponibilidade(obj.getDisponibilidade());
-        entity.setCapaImg(obj.getCapaImg());
-        entity.setContracapaImg(obj.getContracapaImg());
-        entity.setIdioma(obj.getIdioma());
-        entity.setLivro(obj.getLivro());
-        entity.setEditora(obj.getEditora());
-    }
+
 }
