@@ -30,7 +30,7 @@ public class EmailController {
                 emailService.enviarEmail(mensagem);
                 return ResponseEntity.ok().body("Email enviado com sucesso!");
             } catch (Exception e) {
-                return ResponseEntity.badRequest().body("Erro ao enviar email. Tente novamente mais tarde!");
+                return ResponseEntity.badRequest().body(e.getMessage());
             }
         }
 

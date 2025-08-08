@@ -14,6 +14,7 @@ import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ObjectInputFilter.Status;
 import java.util.List;
 
 @Service
@@ -43,6 +44,10 @@ public class EmprestimoService {
         return emprestimoMapper.toDTO(emprestimo);
     }
 
+    public List<EmprestimoDTO> buscarPorUsuario(Long idUsuario) {
+        return emprestimoMapper.toDTOList(emprestimoRepository.findByUsuarioIdUsuario(idUsuario));
+    }
+
     public EmprestimoDTO salvarEmprestimo(EmprestimoDTO emprestimoDTO) {
         Emprestimo emprestimo = emprestimoMapper.toEntity(emprestimoDTO);
 
@@ -65,53 +70,94 @@ public class EmprestimoService {
     }
 
     public EmprestimoDTO atualizarEmprestimo(Long id, EmprestimoDTO emprestimoAtualizado) {
-        Emprestimo emprestimoAtual = emprestimoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id));
+    Emprestimo emprestimoAtual = emprestimoRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        Exemplar exemplarAntigo = emprestimoAtual.getExemplar();
-        StatusEmprestimo statusAntigo = emprestimoAtual.getStatus();
+    Exemplar exemplarAntigo = emprestimoAtual.getExemplar();
+    StatusEmprestimo statusAntigo = emprestimoAtual.getStatus();
 
-        updateData(emprestimoAtual, emprestimoAtualizado);
+    
+    updateData(emprestimoAtual, emprestimoAtualizado);
 
-        Exemplar exemplarNovo = exemplarRepository.findById(emprestimoAtual.getExemplar().getIdExemplar())
-                .orElseThrow(() -> new ResourceNotFoundException("Exemplar não encontrado"));
+    Exemplar exemplarNovo = exemplarRepository.findById(emprestimoAtual.getExemplar().getIdExemplar())
+            .orElseThrow(() -> new ResourceNotFoundException("Exemplar não encontrado"));
 
-        if (!exemplarAntigo.getIdExemplar().equals(exemplarNovo.getIdExemplar())) {
+    StatusEmprestimo statusNovo = emprestimoAtual.getStatus();
 
-            exemplarAntigo.setQuantidadeDisponivel(exemplarAntigo.getQuantidadeDisponivel() + 1);
-            exemplarRepository.save(exemplarAntigo);
+ 
+    if (!exemplarAntigo.getIdExemplar().equals(exemplarNovo.getIdExemplar())) {
 
-
-            if (exemplarNovo.getQuantidadeDisponivel() <= 0) {
-                throw new RuntimeException("Novo exemplar está indisponível");
-            }
-            exemplarNovo.setQuantidadeDisponivel(exemplarNovo.getQuantidadeDisponivel() - 1);
-            exemplarRepository.save(exemplarNovo);
+        if (exemplarNovo.getQuantidadeDisponivel() <= 0) {
+            throw new RuntimeException("Novo exemplar está indisponível");
         }
 
-        if (statusAntigo == StatusEmprestimo.PENDENTE &&
-                emprestimoAtual.getStatus() == StatusEmprestimo.DEVOLVIDO) {
+ 
+        exemplarAntigo.setQuantidadeDisponivel(exemplarAntigo.getQuantidadeDisponivel() + 1);
+        exemplarAntigo.setDisponibilidade(DisponibilidadeExemplar.DISPONIVEL);
 
-            exemplarNovo.setQuantidadeDisponivel(exemplarNovo.getQuantidadeDisponivel() + 1);
-            exemplarRepository.save(exemplarNovo);
+        if (exemplarAntigo.getQuantidadeDisponivel() > exemplarAntigo.getQuantidadeTotal()) {
+            exemplarAntigo.setQuantidadeDisponivel(exemplarAntigo.getQuantidadeTotal());
         }
+        exemplarRepository.save(exemplarAntigo);
 
-        if (emprestimoAtual.getExemplar().getQuantidadeDisponivel() <= 0){
-            emprestimoAtual.getExemplar().setDisponibilidade(DisponibilidadeExemplar.INDISPONIVEL);
+        
+        aplicarAtualizacaoDeQuantidade(statusAntigo, statusNovo, exemplarNovo);
+
+        if (exemplarNovo.getQuantidadeDisponivel() <= 0) {
+            exemplarNovo.setDisponibilidade(DisponibilidadeExemplar.INDISPONIVEL);
         }
+        exemplarRepository.save(exemplarNovo);
 
-        emprestimoAtual = emprestimoRepository.save(emprestimoAtual);
-        return emprestimoMapper.toDTO(emprestimoAtual);
+    } else {
+        
+        aplicarAtualizacaoDeQuantidade(statusAntigo, statusNovo, exemplarNovo);
+
+        if (exemplarNovo.getQuantidadeDisponivel() <= 0) {
+            exemplarNovo.setDisponibilidade(DisponibilidadeExemplar.INDISPONIVEL);
+        } else {
+            exemplarNovo.setDisponibilidade(DisponibilidadeExemplar.DISPONIVEL);
+        }
+        exemplarRepository.save(exemplarNovo);
     }
+
+    emprestimoAtual = emprestimoRepository.save(emprestimoAtual);
+    return emprestimoMapper.toDTO(emprestimoAtual);
+}
+
 
 
     public void excluirEmprestimo(Long id) {
-        Emprestimo emprestimo = emprestimoRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException(id)
-        );
+        Emprestimo emprestimo = emprestimoRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(id));
+
+        Exemplar exemplar = emprestimo.getExemplar();
+        exemplar.setQuantidadeDisponivel(exemplar.getQuantidadeDisponivel() + 1);
+        exemplar.setDisponibilidade(DisponibilidadeExemplar.DISPONIVEL);
+        exemplarRepository.save(exemplar);
+
         emprestimoRepository.delete(emprestimo);
     }
 
+    private void aplicarAtualizacaoDeQuantidade(StatusEmprestimo statusAntigo, StatusEmprestimo statusNovo, 
+                Exemplar exemplarNovo){
+
+        if (!statusAntigo.equals(statusNovo)) {
+
+            if (statusAntigo == StatusEmprestimo.PENDENTE && statusNovo == StatusEmprestimo.DEVOLVIDO) {
+                exemplarNovo.setQuantidadeDisponivel(exemplarNovo.getQuantidadeDisponivel() + 1);
+            }
+
+            else if (statusAntigo == StatusEmprestimo.ATRASADO && statusNovo == StatusEmprestimo.DEVOLVIDO) {
+                exemplarNovo.setQuantidadeDisponivel(exemplarNovo.getQuantidadeDisponivel() + 1);
+            }
+
+            else if (statusAntigo == StatusEmprestimo.DEVOLVIDO &&
+                    (statusNovo == StatusEmprestimo.PENDENTE || statusNovo == StatusEmprestimo.ATRASADO)) {
+                exemplarNovo.setQuantidadeDisponivel(exemplarNovo.getQuantidadeDisponivel() - 1);
+            }
+        }
+
+    }
 
     private void updateData(Emprestimo atual, EmprestimoDTO atualizado) {
         atual.setDataEmprestimo(atualizado.getDataEmprestimo());

@@ -1,16 +1,16 @@
 package com.bibliotech.bibliotech.entity.dto;
 
 public class RoleDTO {
-    private Long idRole;
+    private Long id;
     private String role;
 
 
-    public Long getIdRole() {
-        return idRole;
+    public Long getId() {
+        return id;
     }
 
-    public void setIdRole(Long idRole) {
-        this.idRole = idRole;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getRole() {

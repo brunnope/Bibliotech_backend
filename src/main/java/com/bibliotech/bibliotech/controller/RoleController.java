@@ -31,7 +31,7 @@ public class RoleController {
     @PostMapping
     public ResponseEntity<RoleDTO> salvarRole(@RequestBody RoleDTO roleDTO) {
         RoleDTO novaRole = roleService.salvarRole(roleDTO);
-        URI uri = fromCurrentRequest().path("/{id}").buildAndExpand(novaRole.getIdRole()).toUri();
+        URI uri = fromCurrentRequest().path("/{id}").buildAndExpand(novaRole.getId()).toUri();
         return ResponseEntity.created(uri).body(novaRole);
     }
 

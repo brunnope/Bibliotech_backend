@@ -1,5 +1,6 @@
 package com.bibliotech.bibliotech.controller;
 
+import com.bibliotech.bibliotech.entity.Emprestimo;
 import com.bibliotech.bibliotech.entity.dto.EmprestimoDTO;
 import com.bibliotech.bibliotech.service.EmprestimoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,12 @@ public class EmprestimoController {
     public ResponseEntity<EmprestimoDTO> obterEmprestimo(@PathVariable Long id) {
         EmprestimoDTO emprestimo = emprestimoService.obterEmprestimo(id);
         return ResponseEntity.ok().body(emprestimo);
+    }
+
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<EmprestimoDTO>> buscarPorUsuario(@PathVariable Long idUsuario) {
+        List<EmprestimoDTO> emprestimos = emprestimoService.buscarPorUsuario(idUsuario);
+        return ResponseEntity.ok(emprestimos);
     }
 
     @PostMapping
