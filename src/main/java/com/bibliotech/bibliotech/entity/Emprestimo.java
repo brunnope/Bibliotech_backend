@@ -2,6 +2,7 @@ package com.bibliotech.bibliotech.entity;
 
 import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -34,6 +35,19 @@ public class Emprestimo implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_exemplar", nullable = false)
     private Exemplar exemplar;
+
+    public Emprestimo(LocalDate dataEmprestimo, LocalDate dataPrevistaDevolucao, LocalDate dataDevolucao,
+                      StatusEmprestimo status,
+                      Usuario usuario, Exemplar exemplar) {
+        this.dataEmprestimo = dataEmprestimo;
+        this.dataPrevistaDevolucao = dataPrevistaDevolucao;
+        this.dataDevolucao = dataDevolucao;
+        this.status = status;
+        this.usuario = usuario;
+        this.exemplar = exemplar;
+    }
+
+    public Emprestimo() {}
 
     public Long getIdEmprestimo() {
         return idEmprestimo;

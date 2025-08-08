@@ -8,12 +8,14 @@ public class ExemplarDTO {
     private Long idExemplar;
     private Integer numExemplar;
     private Integer anoPublicacao;
+    private Integer quantidadeTotal;
+    private Integer quantidadeDisponivel;
     private DisponibilidadeExemplar disponibilidade;
     private String capaImg;
     private String contracapaImg;
     private String idioma;
-    private Livro livro;
-    private Editora editora;
+    private LivroDTO livro;
+    private EditoraDTO editora;
 
 
     public Long getIdExemplar() {
@@ -38,6 +40,22 @@ public class ExemplarDTO {
 
     public void setAnoPublicacao(Integer anoPublicacao) {
         this.anoPublicacao = anoPublicacao;
+    }
+
+    public Integer getQuantidadeTotal() {
+        return quantidadeTotal;
+    }
+
+    public void setQuantidadeTotal(Integer quantidadeTotal) {
+        this.quantidadeTotal = quantidadeTotal;
+    }
+
+    public Integer getQuantidadeDisponivel() {
+        return quantidadeDisponivel;
+    }
+
+    public void setQuantidadeDisponivel(Integer quantidadeDisponivel) {
+        this.quantidadeDisponivel = quantidadeDisponivel;
     }
 
     public DisponibilidadeExemplar getDisponibilidade() {
@@ -72,19 +90,19 @@ public class ExemplarDTO {
         this.idioma = idioma;
     }
 
-    public Livro getLivro() {
+    public LivroDTO getLivro() {
         return livro;
     }
 
-    public void setLivro(Livro livro) {
+    public void setLivro(LivroDTO livro) {
         this.livro = livro;
     }
 
-    public Editora getEditora() {
+    public EditoraDTO getEditora() {
         return editora;
     }
 
-    public void setEditora(Editora editora) {
+    public void setEditora(EditoraDTO editora) {
         this.editora = editora;
     }
 }

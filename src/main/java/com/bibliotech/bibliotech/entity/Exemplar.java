@@ -24,6 +24,12 @@ public class Exemplar implements Serializable {
 
     private Integer anoPublicacao;
 
+    @Column(nullable = false)
+    private Integer quantidadeTotal;
+
+    @Column(nullable = false)
+    private Integer quantidadeDisponivel;
+
     @Enumerated(EnumType.STRING)
     private DisponibilidadeExemplar disponibilidade;
 
@@ -48,10 +54,13 @@ public class Exemplar implements Serializable {
     @OneToMany(mappedBy = "exemplar", cascade = CascadeType.ALL)
     private List<Emprestimo> emprestimos = new ArrayList<>();
 
-    public Exemplar(Integer numExemplar, Integer anoPublicacao, DisponibilidadeExemplar disponibilidade,
+    public Exemplar(Integer numExemplar, Integer anoPublicacao, Integer quantidadeTotal, Integer quantidadeDisponivel,
+                    DisponibilidadeExemplar disponibilidade,
                     String capaImg, String contracapaImg, String idioma, Livro livro, Editora editora) {
         this.numExemplar = numExemplar;
         this.anoPublicacao = anoPublicacao;
+        this.quantidadeTotal = quantidadeTotal;
+        this.quantidadeDisponivel = quantidadeDisponivel;
         this.disponibilidade = disponibilidade;
         this.capaImg = capaImg;
         this.contracapaImg = contracapaImg;
@@ -86,6 +95,22 @@ public class Exemplar implements Serializable {
 
     public void setAnoPublicacao(Integer anoPublicacao) {
         this.anoPublicacao = anoPublicacao;
+    }
+
+    public Integer getQuantidadeTotal() {
+        return quantidadeTotal;
+    }
+
+    public void setQuantidadeTotal(Integer quantidadeTotal) {
+        this.quantidadeTotal = quantidadeTotal;
+    }
+
+    public Integer getQuantidadeDisponivel() {
+        return quantidadeDisponivel;
+    }
+
+    public void setQuantidadeDisponivel(Integer quantidadeDisponivel) {
+        this.quantidadeDisponivel = quantidadeDisponivel;
     }
 
     public DisponibilidadeExemplar getDisponibilidade() {

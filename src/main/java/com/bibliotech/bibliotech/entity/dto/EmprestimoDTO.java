@@ -2,6 +2,7 @@ package com.bibliotech.bibliotech.entity.dto;
 
 import com.bibliotech.bibliotech.entity.Exemplar;
 import com.bibliotech.bibliotech.entity.Usuario;
+import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
 
 import java.time.LocalDate;
 
@@ -10,8 +11,9 @@ public class EmprestimoDTO {
     private LocalDate dataEmprestimo;
     private LocalDate dataPrevistaDevolucao;
     private LocalDate dataDevolucao;
-    private Usuario usuario;
-    private Exemplar exemplar;
+    private StatusEmprestimo status;
+    private UsuarioDTO usuario;
+    private ExemplarDTO exemplar;
 
 
     public Long getIdEmprestimo() {
@@ -46,19 +48,27 @@ public class EmprestimoDTO {
         this.dataDevolucao = dataDevolucao;
     }
 
-    public Usuario getUsuario() {
+    public StatusEmprestimo getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusEmprestimo status) {
+        this.status = status;
+    }
+
+    public UsuarioDTO getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(UsuarioDTO usuario) {
         this.usuario = usuario;
     }
 
-    public Exemplar getExemplar() {
+    public ExemplarDTO getExemplar() {
         return exemplar;
     }
 
-    public void setExemplar(Exemplar exemplar) {
+    public void setExemplar(ExemplarDTO exemplar) {
         this.exemplar = exemplar;
     }
 }

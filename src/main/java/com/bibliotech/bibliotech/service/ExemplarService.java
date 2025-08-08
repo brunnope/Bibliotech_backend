@@ -2,7 +2,10 @@ package com.bibliotech.bibliotech.service;
 
 import com.bibliotech.bibliotech.entity.Exemplar;
 import com.bibliotech.bibliotech.entity.dto.ExemplarDTO;
+import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
+import com.bibliotech.bibliotech.mapper.EditoraMapper;
 import com.bibliotech.bibliotech.mapper.ExemplarMapper;
+import com.bibliotech.bibliotech.mapper.LivroMapper;
 import com.bibliotech.bibliotech.repository.ExemplarRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,12 @@ public class ExemplarService {
     @Autowired
     private ExemplarMapper exemplarMapper;
 
+    @Autowired
+    private LivroMapper livroMapper;
+
+    @Autowired
+    private EditoraMapper editoraMapper;
+
     public List<ExemplarDTO> listarExemplares() {
         List<Exemplar> exemplares = exemplarRepository.findAll();
         return exemplarMapper.toDTOList(exemplares);
@@ -33,6 +42,11 @@ public class ExemplarService {
 
     public ExemplarDTO salvarExemplar(ExemplarDTO exemplarDTO) {
         Exemplar exemplar = exemplarMapper.toEntity(exemplarDTO);
+
+        if (exemplar.getQuantidadeDisponivel() <= 0){
+            exemplar.setDisponibilidade(DisponibilidadeExemplar.INDISPONIVEL);
+        }
+
         exemplar = exemplarRepository.save(exemplar);
         return exemplarMapper.toDTO(exemplar);
     }
@@ -48,8 +62,12 @@ public class ExemplarService {
         exemplarAtual.setCapaImg(exemplarDTO.getCapaImg());
         exemplarAtual.setContracapaImg(exemplarDTO.getContracapaImg());
         exemplarAtual.setIdioma(exemplarDTO.getIdioma());
-        exemplarAtual.setLivro(exemplarDTO.getLivro());
-        exemplarAtual.setEditora(exemplarDTO.getEditora());
+        exemplarAtual.setLivro(livroMapper.toEntity(exemplarDTO.getLivro()));
+        exemplarAtual.setEditora(editoraMapper.toEntity(exemplarDTO.getEditora()));
+
+        if (exemplarAtual.getQuantidadeDisponivel() <= 0){
+            exemplarAtual.setDisponibilidade(DisponibilidadeExemplar.INDISPONIVEL);
+        }
 
         Exemplar exemplarAtualizado = exemplarRepository.save(exemplarAtual);
         return exemplarMapper.toDTO(exemplarAtualizado);
@@ -61,6 +79,7 @@ public class ExemplarService {
         );
         exemplarRepository.delete(exemplar);
     }
+
 
 
 }

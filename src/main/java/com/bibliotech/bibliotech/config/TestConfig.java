@@ -3,9 +3,13 @@ package com.bibliotech.bibliotech.config;
 import com.bibliotech.bibliotech.controller.EmailController;
 import com.bibliotech.bibliotech.entity.*;
 import com.bibliotech.bibliotech.entity.dto.IdentificadorDTO;
+import com.bibliotech.bibliotech.entity.dto.RoleDTO;
 import com.bibliotech.bibliotech.entity.dto.UsuarioComSenhaDTO;
 import com.bibliotech.bibliotech.entity.dto.UsuarioDTO;
 import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
+import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
+import com.bibliotech.bibliotech.mapper.RoleMapper;
+import com.bibliotech.bibliotech.mapper.UsuarioMapper;
 import com.bibliotech.bibliotech.repository.*;
 import com.bibliotech.bibliotech.service.UsuarioService;
 import com.bibliotech.bibliotech.service.notificacao.EmailService;
@@ -20,15 +24,12 @@ import java.time.LocalDate;
 @Configuration
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
-    
+
     @Autowired
     private LivroRepository livroRepository;
-    
+
     @Autowired
     private EditoraRepository editoraRepository;
-    
-    @Autowired        
-    private ExemplarRepository exemplarRepository;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -37,54 +38,68 @@ public class TestConfig implements CommandLineRunner {
     private RoleRepository roleRepository;
 
     @Autowired
-    private EmailController emailController;
+    private EmprestimoRepository emprestimoRepository;
+
+    @Autowired
+    private UsuarioMapper usuarioMapper;
+
+    @Autowired
+    private RoleMapper roleMapper;
+
 
     @Override
     public void run(String... args) throws Exception {
 
-        Editora editora = new Editora("Editora Exemplo");
+        Editora editora = new Editora("Principis");
         editora = editoraRepository.save(editora);
 
-        Livro livro = new Livro("Livro Exemplo", "Autor Exemplo", "Ficção",
-                "1234567890123", LocalDate.now());
+        Editora editora2 = new Editora("Companhia das Letras");
+        editora2 = editoraRepository.save(editora2);
+
+        Livro livro = new Livro("1984", "George Orwell", "Ficção",
+                "6555522267", LocalDate.now());
 
         Exemplar exemplar1 = new Exemplar(
-                1,                       // numExemplar
-                2023,                    // anoPublicacao
-                DisponibilidadeExemplar.DISPONIVEL, // disponibilidade
-                "URL_CAPA_1",            // capaImg
-                "URL_CONTRACAPA_1",      // contracapaImg
-                "Português",             // idioma
-                livro,                   // livro
-                editora                  // editora
+                1,
+                2021,
+                2,
+                1,
+                DisponibilidadeExemplar.DISPONIVEL,
+                "https://m.media-amazon.com/images/I/61t0bwt1s3L._SL1000_.jpg",
+                "https://m.media-amazon.com/images/I/61GBq2Pbo2L._SL1000_.jpg",
+                "Português",
+                livro,
+                editora
         );
 
         Exemplar exemplar2 = new Exemplar(
                 2,
-                2022,
+                2009,
+                2,
+                0,
                 DisponibilidadeExemplar.INDISPONIVEL,
-                "URL_CAPA_2",
-                "URL_CONTRACAPA_2",
-                "Inglês",
+                "https://m.media-amazon.com/images/I/819js3EQwbL._SL1500_.jpg",
+                "https://m.media-amazon.com/images/I/812YrJzjlIL._SL1500_.jpg",
+                "Português",
                 livro,
-                editora
+                editora2
         );
 
 
         livro.getExemplares().add(exemplar1);
         livro.getExemplares().add(exemplar2);
 
-        //Salva o Livro e os Exemplares (cascade no Livro persiste os Exemplares)
         livroRepository.save(livro);
+
 
         // Adicionando ROLE ADMINISTRADOR e USER
         Role roleAdmin = new Role();
         roleAdmin.setRole("ADMINISTRADOR");
-        roleAdmin = roleRepository.save(roleAdmin);
+        roleRepository.save(roleAdmin);
 
         Role roleUser = new Role();
         roleUser.setRole("USER");
-        roleUser = roleRepository.save(roleUser);
+        roleRepository.save(roleUser);
 
 
         // Criando usuário com ROLE ADMINISTRADOR
@@ -104,6 +119,18 @@ public class TestConfig implements CommandLineRunner {
         usuario2.setMatricula("202315020028");
         usuario2.setRole(roleUser);
         usuarioService.salvarUsuario(usuario2);
+
+        Usuario usuarioTeste = usuarioMapper.toEntity(usuarioService.obterUsuario(Long.parseLong("2")));
+        Emprestimo emprestimo = new Emprestimo(
+                LocalDate.now(),
+                LocalDate.now().plusDays(15),
+                null,
+                StatusEmprestimo.PENDENTE,
+                usuarioTeste,
+                exemplar1
+        );
+
+        emprestimoRepository.save(emprestimo);
 
     }
 }
