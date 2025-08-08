@@ -1,7 +1,9 @@
 package com.bibliotech.bibliotech.service;
 
 import com.bibliotech.bibliotech.entity.Exemplar;
+import com.bibliotech.bibliotech.entity.Livro;
 import com.bibliotech.bibliotech.entity.dto.ExemplarDTO;
+import com.bibliotech.bibliotech.entity.dto.LivroDTO;
 import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
 import com.bibliotech.bibliotech.mapper.EditoraMapper;
 import com.bibliotech.bibliotech.mapper.ExemplarMapper;
@@ -40,13 +42,14 @@ public class ExemplarService {
         return exemplarMapper.toDTO(exemplar);
     }
 
+    public ExemplarDTO ultimoExemplar() {
+        Exemplar exemplar = exemplarRepository.ultimoExemplar();
+        return exemplarMapper.toDTO(exemplar);
+    }
+
+
     public ExemplarDTO salvarExemplar(ExemplarDTO exemplarDTO) {
         Exemplar exemplar = exemplarMapper.toEntity(exemplarDTO);
-
-        if (exemplar.getQuantidadeDisponivel() <= 0){
-            exemplar.setDisponibilidade(DisponibilidadeExemplar.INDISPONIVEL);
-        }
-
         exemplar = exemplarRepository.save(exemplar);
         return exemplarMapper.toDTO(exemplar);
     }
@@ -58,6 +61,8 @@ public class ExemplarService {
 
         exemplarAtual.setNumExemplar(exemplarDTO.getNumExemplar());
         exemplarAtual.setAnoPublicacao(exemplarDTO.getAnoPublicacao());
+        exemplarAtual.setQuantidadeTotal(exemplarDTO.getQuantidadeTotal());
+        exemplarAtual.setQuantidadeDisponivel(exemplarDTO.getQuantidadeDisponivel());
         exemplarAtual.setDisponibilidade(exemplarDTO.getDisponibilidade());
         exemplarAtual.setCapaImg(exemplarDTO.getCapaImg());
         exemplarAtual.setContracapaImg(exemplarDTO.getContracapaImg());
@@ -67,6 +72,8 @@ public class ExemplarService {
 
         if (exemplarAtual.getQuantidadeDisponivel() <= 0){
             exemplarAtual.setDisponibilidade(DisponibilidadeExemplar.INDISPONIVEL);
+        }else {
+            exemplarAtual.setDisponibilidade(DisponibilidadeExemplar.DISPONIVEL);
         }
 
         Exemplar exemplarAtualizado = exemplarRepository.save(exemplarAtual);

@@ -4,6 +4,7 @@ import com.bibliotech.bibliotech.entity.Emprestimo;
 import com.bibliotech.bibliotech.entity.Exemplar;
 import com.bibliotech.bibliotech.entity.Usuario;
 import com.bibliotech.bibliotech.entity.dto.EmprestimoDTO;
+import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
 import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
 import com.bibliotech.bibliotech.mapper.EmprestimoMapper;
 import com.bibliotech.bibliotech.repository.EmprestimoRepository;
@@ -53,8 +54,12 @@ public class EmprestimoService {
         }
 
         exemplar.setQuantidadeDisponivel(exemplar.getQuantidadeDisponivel() - 1);
-        exemplarRepository.save(exemplar);
 
+        if (exemplar.getQuantidadeDisponivel() <= 0){
+            exemplar.setDisponibilidade(DisponibilidadeExemplar.INDISPONIVEL);
+        }
+
+        exemplarRepository.save(exemplar);
         emprestimo = emprestimoRepository.save(emprestimo);
         return emprestimoMapper.toDTO(emprestimo);
     }
@@ -89,6 +94,10 @@ public class EmprestimoService {
 
             exemplarNovo.setQuantidadeDisponivel(exemplarNovo.getQuantidadeDisponivel() + 1);
             exemplarRepository.save(exemplarNovo);
+        }
+
+        if (emprestimoAtual.getExemplar().getQuantidadeDisponivel() <= 0){
+            emprestimoAtual.getExemplar().setDisponibilidade(DisponibilidadeExemplar.INDISPONIVEL);
         }
 
         emprestimoAtual = emprestimoRepository.save(emprestimoAtual);

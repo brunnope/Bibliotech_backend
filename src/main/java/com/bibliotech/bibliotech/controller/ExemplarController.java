@@ -1,6 +1,7 @@
 package com.bibliotech.bibliotech.controller;
 
 import com.bibliotech.bibliotech.entity.dto.ExemplarDTO;
+import com.bibliotech.bibliotech.entity.dto.LivroDTO;
 import com.bibliotech.bibliotech.service.ExemplarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,11 @@ public class ExemplarController {
     @GetMapping("/{id}")
     public ResponseEntity<ExemplarDTO> obterExemplar(@PathVariable Long id) {
         return ResponseEntity.ok().body(exemplarService.obterExemplar(id));
+    }
+
+    @GetMapping("/ultimo")
+    public ResponseEntity<ExemplarDTO> obterUltimoExemplar() {
+        return ResponseEntity.ok().body(exemplarService.ultimoExemplar());
     }
 
     @PostMapping
