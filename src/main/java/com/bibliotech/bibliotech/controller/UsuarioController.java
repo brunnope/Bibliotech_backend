@@ -1,6 +1,7 @@
 package com.bibliotech.bibliotech.controller;
 
 import com.bibliotech.bibliotech.entity.Usuario;
+import com.bibliotech.bibliotech.entity.dto.LivroDTO;
 import com.bibliotech.bibliotech.entity.dto.LoginDTO;
 import com.bibliotech.bibliotech.entity.dto.UsuarioComSenhaDTO;
 import com.bibliotech.bibliotech.entity.dto.UsuarioDTO;
@@ -28,10 +29,28 @@ public class UsuarioController {
         return ResponseEntity.ok().body(usuariosDTO);
     }
 
+    @GetMapping("/alunos")
+    public ResponseEntity<List<UsuarioDTO>> listarAlunos() {
+        List<UsuarioDTO> alunosDTO = usuarioService.listarAlunos();
+        return ResponseEntity.ok().body(alunosDTO);
+    }
+
+    @GetMapping("/admins")
+    public ResponseEntity<List<UsuarioDTO>> listarAdmins() {
+        List<UsuarioDTO> alunosDTO = usuarioService.listarAdmins();
+        return ResponseEntity.ok().body(alunosDTO);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> obterUsuario(@PathVariable Long id) {
         return ResponseEntity.ok().body(usuarioService.obterUsuario(id));
+    }
+
+
+    @GetMapping("/ultimo")
+    public ResponseEntity<UsuarioDTO> obterUlitmoUsuario() {
+        return ResponseEntity.ok().body(usuarioService.ultimoUsuario());
     }
 
 

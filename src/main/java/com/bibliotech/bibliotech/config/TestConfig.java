@@ -1,19 +1,13 @@
 package com.bibliotech.bibliotech.config;
 
-import com.bibliotech.bibliotech.controller.EmailController;
 import com.bibliotech.bibliotech.entity.*;
-import com.bibliotech.bibliotech.entity.dto.IdentificadorDTO;
-import com.bibliotech.bibliotech.entity.dto.RoleDTO;
 import com.bibliotech.bibliotech.entity.dto.UsuarioComSenhaDTO;
-import com.bibliotech.bibliotech.entity.dto.UsuarioDTO;
 import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
 import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
 import com.bibliotech.bibliotech.mapper.RoleMapper;
 import com.bibliotech.bibliotech.mapper.UsuarioMapper;
 import com.bibliotech.bibliotech.repository.*;
 import com.bibliotech.bibliotech.service.UsuarioService;
-import com.bibliotech.bibliotech.service.notificacao.EmailService;
-import com.bibliotech.bibliotech.service.notificacao.Mensagem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -49,6 +43,15 @@ public class TestConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        // Adicionando ROLE ADMINISTRADOR e USER
+        Role roleAdmin = new Role();
+        roleAdmin.setRole("ADMINISTRADOR");
+        roleRepository.save(roleAdmin);
+
+        Role roleUser = new Role();
+        roleUser.setRole("USER");
+        roleRepository.save(roleUser);
 
         Editora editora = new Editora("Principis");
         editora = editoraRepository.save(editora);
@@ -91,23 +94,12 @@ public class TestConfig implements CommandLineRunner {
 
         livroRepository.save(livro);
 
-
-        // Adicionando ROLE ADMINISTRADOR e USER
-        Role roleAdmin = new Role();
-        roleAdmin.setRole("ADMINISTRADOR");
-        roleRepository.save(roleAdmin);
-
-        Role roleUser = new Role();
-        roleUser.setRole("USER");
-        roleRepository.save(roleUser);
-
-
         // Criando usuário com ROLE ADMINISTRADOR
         UsuarioComSenhaDTO usuario = new UsuarioComSenhaDTO();
         usuario.setNome("Usuário Admin");
         usuario.setEmail("cicero.brunno@academico.ifpb.edu.br");
         usuario.setSenha("senha123");
-        usuario.setMatricula("12345678");
+        usuario.setMatricula("000000000000");
         usuario.setRole(roleAdmin);
         usuarioService.salvarUsuario(usuario);
 

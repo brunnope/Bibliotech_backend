@@ -2,8 +2,10 @@ package com.bibliotech.bibliotech.service;
 
 import com.bibliotech.bibliotech.entity.Emprestimo;
 import com.bibliotech.bibliotech.entity.Exemplar;
+import com.bibliotech.bibliotech.entity.Livro;
 import com.bibliotech.bibliotech.entity.Usuario;
 import com.bibliotech.bibliotech.entity.dto.EmprestimoDTO;
+import com.bibliotech.bibliotech.entity.dto.LivroDTO;
 import com.bibliotech.bibliotech.entity.enums.DisponibilidadeExemplar;
 import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
 import com.bibliotech.bibliotech.mapper.EmprestimoMapper;

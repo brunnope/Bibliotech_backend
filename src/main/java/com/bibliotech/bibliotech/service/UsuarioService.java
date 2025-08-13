@@ -1,6 +1,8 @@
 package com.bibliotech.bibliotech.service;
 
+import com.bibliotech.bibliotech.entity.Livro;
 import com.bibliotech.bibliotech.entity.Usuario;
+import com.bibliotech.bibliotech.entity.dto.LivroDTO;
 import com.bibliotech.bibliotech.entity.dto.UsuarioComSenhaDTO;
 import com.bibliotech.bibliotech.entity.dto.UsuarioDTO;
 import com.bibliotech.bibliotech.mapper.UsuarioMapper;
@@ -27,10 +29,25 @@ public class UsuarioService {
         return usuarioMapper.toDTOList(usuarios);
     }
 
+    public List<UsuarioDTO> listarAlunos() {
+        List<Usuario> usuarios = usuarioRepository.listarAlunos();
+        return usuarioMapper.toDTOList(usuarios);
+    }
+
+    public List<UsuarioDTO> listarAdmins() {
+        List<Usuario> usuarios = usuarioRepository.listarAdmins();
+        return usuarioMapper.toDTOList(usuarios);
+    }
+
 
     public UsuarioDTO obterUsuario(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
+        return usuarioMapper.toDTO(usuario);
+    }
+
+    public UsuarioDTO ultimoUsuario() {
+        Usuario usuario = usuarioRepository.ultimoUsuario();
         return usuarioMapper.toDTO(usuario);
     }
 

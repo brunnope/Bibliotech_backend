@@ -2,6 +2,7 @@ package com.bibliotech.bibliotech.controller;
 
 import com.bibliotech.bibliotech.entity.Emprestimo;
 import com.bibliotech.bibliotech.entity.dto.EmprestimoDTO;
+import com.bibliotech.bibliotech.entity.dto.LivroDTO;
 import com.bibliotech.bibliotech.service.EmprestimoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
