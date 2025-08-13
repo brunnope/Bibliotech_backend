@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tb_exemplar")
+@Table(name = "tb_exemplar",
+       uniqueConstraints = @UniqueConstraint(columnNames = {"numExemplar", "id_editora"}))
 public class Exemplar implements Serializable {
 
     private static final long serialVersionUID = 1L;

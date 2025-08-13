@@ -9,6 +9,7 @@ import com.bibliotech.bibliotech.mapper.UsuarioMapper;
 import com.bibliotech.bibliotech.repository.UsuarioRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -68,10 +69,23 @@ public class UsuarioService {
 
 
     public UsuarioDTO salvarUsuario(UsuarioComSenhaDTO dto) {
+    
+    if (usuarioRepository.existsByEmail(dto.getEmail())) {
+        throw new DataIntegrityViolationException("Erro! Este email já está em uso.");
+    }
+
+    if (usuarioRepository.existsByMatricula(dto.getMatricula())) {
+        throw new DataIntegrityViolationException("Erro! Esta matrícula já está em uso.");
+    }
+
+    try {
         Usuario usuario = usuarioMapper.toEntity(dto);
         usuario = usuarioRepository.save(usuario);
-        return usuarioMapper.toDTO(usuario);
+        return usuarioMapper.toDTO(usuario); 
+    } catch (Exception e) {
+        throw new RuntimeException("Erro inesperado ao salvar o usuário.", e);
     }
+}
 
 
     public UsuarioDTO atualizarUsuario(Long id, UsuarioComSenhaDTO dto) {
@@ -83,6 +97,14 @@ public class UsuarioService {
         entity.setEmail(dto.getEmail());
         if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
             entity.setSenha(dto.getSenha());
+        }
+
+        if (usuarioRepository.existsByEmail(entity.getEmail())) {
+        throw new DataIntegrityViolationException("Erro! Este email já está em uso.");
+        }
+
+        if (usuarioRepository.existsByMatricula(entity.getMatricula())) {
+            throw new DataIntegrityViolationException("Erro! Esta matrícula já está em uso.");
         }
 
         Usuario atualizado = usuarioRepository.save(entity);
@@ -97,13 +119,5 @@ public class UsuarioService {
 
     public UsuarioComSenhaDTO buscarPorEmailOuMatricula(String identificador) {
         return usuarioMapper.toEntityDTOComSenha(usuarioRepository.findByEmailOrMatricula(identificador));
-    }
-
-
-    private void updateData(Usuario usuario, Usuario obj) {
-        usuario.setMatricula(obj.getMatricula());
-        usuario.setNome(obj.getNome());
-        usuario.setEmail(obj.getEmail());
-        usuario.setSenha(obj.getSenha());
     }
 }

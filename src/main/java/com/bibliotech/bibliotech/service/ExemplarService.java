@@ -11,8 +11,10 @@ import com.bibliotech.bibliotech.mapper.LivroMapper;
 import com.bibliotech.bibliotech.repository.ExemplarRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Service
@@ -49,10 +51,15 @@ public class ExemplarService {
 
 
     public ExemplarDTO salvarExemplar(ExemplarDTO exemplarDTO) {
-        Exemplar exemplar = exemplarMapper.toEntity(exemplarDTO);
-        exemplar = exemplarRepository.save(exemplar);
-        return exemplarMapper.toDTO(exemplar);
+        try {
+            Exemplar exemplar = exemplarMapper.toEntity(exemplarDTO);
+            exemplar = exemplarRepository.save(exemplar);
+            return exemplarMapper.toDTO(exemplar);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("Erro! Número de exemplar já existe para essa editora."); 
+        }
     }
+
 
     public ExemplarDTO atualizarExemplar(Long id, ExemplarDTO exemplarDTO) {
         Exemplar exemplarAtual = exemplarRepository.findById(id).orElseThrow(
@@ -72,8 +79,9 @@ public class ExemplarService {
 
         if (exemplarAtual.getQuantidadeDisponivel() <= 0){
             exemplarAtual.setDisponibilidade(DisponibilidadeExemplar.INDISPONIVEL);
-        }else {
+        }else if (exemplarAtual.getDisponibilidade() != DisponibilidadeExemplar.INDISPONIVEL){
             exemplarAtual.setDisponibilidade(DisponibilidadeExemplar.DISPONIVEL);
+            
         }
 
         Exemplar exemplarAtualizado = exemplarRepository.save(exemplarAtual);
