@@ -5,6 +5,7 @@ import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
@@ -22,4 +23,7 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
             (
         StatusEmprestimo status, String nome, String matricula
     );
+
+    List<Emprestimo> findByDataPrevistaDevolucaoBetween(LocalDate inicio, LocalDate fim);
+
 }

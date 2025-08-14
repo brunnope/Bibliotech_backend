@@ -1,6 +1,5 @@
 package com.bibliotech.bibliotech.service.notificacao;
 
-import jakarta.annotation.PostConstruct;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
@@ -8,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailService extends SimpleEmail{
+public class EmailService{
 
     @Value("${email.usuario}")
     private String usuario;
@@ -16,23 +15,27 @@ public class EmailService extends SimpleEmail{
     @Value("${email.senha}")
     private String senha;
 
-    @PostConstruct
-    public void init() {
-        setHostName("smtp.gmail.com");
-        setSmtpPort(587);
-        setAuthenticator(new DefaultAuthenticator(usuario, senha));
-        setStartTLSEnabled(true);
-        try {
-            setFrom(usuario);
-        } catch (EmailException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    @Value("${email.host:smtp.gmail.com}")
+    private String hostName;
+
+    @Value("${email.port:587}")
+    private int port;
 
     public void enviarEmail(Mensagem mensagem) throws EmailException {
-        setSubject(mensagem.getTitulo());
-        setMsg(mensagem.getConteudo());
-        addTo(mensagem.getDestinatario());
-        send();
+
+        SimpleEmail email = new SimpleEmail();
+
+        email.setHostName(hostName);
+        email.setSmtpPort(port);
+        email.setAuthenticator(new DefaultAuthenticator(usuario, senha));
+        email.setStartTLSEnabled(true);
+
+        email.setFrom(usuario);
+        email.setSubject(mensagem.getTitulo());
+        email.setMsg(mensagem.getConteudo());
+        email.addTo(mensagem.getDestinatario());
+
+        email.send();
     }
+
 }

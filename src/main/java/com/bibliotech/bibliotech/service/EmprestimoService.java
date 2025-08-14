@@ -13,10 +13,15 @@ import com.bibliotech.bibliotech.repository.EmprestimoRepository;
 import com.bibliotech.bibliotech.repository.ExemplarRepository;
 import com.bibliotech.bibliotech.repository.UsuarioRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
+import com.bibliotech.bibliotech.service.notificacao.EmailService;
+import com.bibliotech.bibliotech.service.notificacao.Mensagem;
+import org.apache.commons.mail.EmailException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.ObjectInputFilter.Status;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -33,6 +38,9 @@ public class EmprestimoService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private EmailService emailService;
 
     public List<EmprestimoDTO> listarEmprestimos(String status, String busca) {
         List<Emprestimo> emprestimos;
@@ -181,6 +189,51 @@ public class EmprestimoService {
 
         emprestimoRepository.delete(emprestimo);
     }
+
+    public void notificarUsuarios() {
+        LocalDate hoje = LocalDate.now();
+        LocalDate limiteProximoAVencimento = hoje.plusDays(3);
+
+        List<Emprestimo> proximosDeVencer = emprestimoRepository.findByStatus(StatusEmprestimo.PENDENTE);
+
+        List<Emprestimo> atrasados = emprestimoRepository.findByStatus(StatusEmprestimo.ATRASADO);
+
+        for (Emprestimo emprestimo : proximosDeVencer) {
+            if (emprestimo.getDataPrevistaDevolucao() != null &&
+                emprestimo.getDataPrevistaDevolucao().isEqual(limiteProximoAVencimento)) {
+
+                enviarNotificacao(emprestimo,
+                    "Sua devolução está próxima!",
+                    "Prezado " + emprestimo.getUsuario().getNome() +
+                    ", o prazo para devolução do seu empréstimo está próximo. Restam apenas 3 dias."
+                );
+            }
+        }
+
+        for (Emprestimo emprestimo : atrasados) {
+            enviarNotificacao(emprestimo,
+                "Seu empréstimo está atrasado!",
+                "Prezado " + emprestimo.getUsuario().getNome() +
+                ", o prazo para devolução do livro " + emprestimo.getExemplar().getLivro().getTitulo() + " já expirou." +
+                " Por favor, regularize a devolução o mais rápido possível para evitar sanções."
+            );
+        }
+    }
+
+    @Scheduled(cron = "0 0 8 * * *")
+    public void executarNotificacoesAgendadas() {
+        notificarUsuarios();
+    }
+
+
+    private void enviarNotificacao(Emprestimo emprestimo, String titulo, String conteudo) {
+        try {
+            emailService.enviarEmail(new Mensagem(emprestimo.getUsuario().getEmail(), titulo, conteudo));
+        } catch (EmailException e) {
+            System.err.println("Erro ao enviar e-mail para " + emprestimo.getUsuario().getEmail() + ": " + e.getMessage());
+        }
+    }
+
 
     private void aplicarAtualizacaoDeQuantidade(StatusEmprestimo statusAntigo, StatusEmprestimo statusNovo, 
                 Exemplar exemplarNovo){

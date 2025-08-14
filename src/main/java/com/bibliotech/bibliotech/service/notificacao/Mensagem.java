@@ -12,6 +12,9 @@ public class Mensagem {
         this.conteudo = conteudo;
     }
 
+    public Mensagem() {
+    }
+
     public String getDestinatario() {
         return destinatario;
     }

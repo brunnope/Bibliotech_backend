@@ -20,7 +20,7 @@ public class EmailController {
     private UsuarioService usuarioService;
 
 
-    @PostMapping("/enviar")
+    @PostMapping("/enviar/senha")
     public ResponseEntity<String> enviarSenha(@RequestBody IdentificadorDTO identificador) {
         UsuarioComSenhaDTO usuario = usuarioService.buscarPorEmailOuMatricula(identificador.getIdentificador());
         if (!(usuario == null)) {
