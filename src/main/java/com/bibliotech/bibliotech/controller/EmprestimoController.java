@@ -4,9 +4,12 @@ import com.bibliotech.bibliotech.entity.Emprestimo;
 import com.bibliotech.bibliotech.entity.dto.EmprestimoDTO;
 import com.bibliotech.bibliotech.entity.dto.LivroDTO;
 import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
+import com.bibliotech.bibliotech.relatorio.RelatorioEmprestimo;
 import com.bibliotech.bibliotech.service.EmprestimoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +24,8 @@ public class EmprestimoController {
 
     @Autowired
     private EmprestimoService emprestimoService;
+
+
 
     @GetMapping
     public ResponseEntity<List<EmprestimoDTO>> listarEmprestimos(
@@ -63,4 +68,30 @@ public class EmprestimoController {
         emprestimoService.excluirEmprestimo(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/exportar")
+    public ResponseEntity<byte[]> exportarEmprestimosPdf(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String busca)
+    {
+        try {
+            List<EmprestimoDTO> emprestimos = emprestimoService.listarEmprestimos(status, busca);
+
+            byte[] pdfBytes = RelatorioEmprestimo.gerarPdfEmprestimos(emprestimos);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=emprestimos.pdf");
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .headers(headers)
+                    .body(pdfBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
 }
