@@ -34,8 +34,34 @@ public class EmprestimoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<EmprestimoDTO> listarEmprestimos() {
-        List<Emprestimo> emprestimos = emprestimoRepository.findAll();
+    public List<EmprestimoDTO> listarEmprestimos(String status, String busca) {
+        List<Emprestimo> emprestimos;
+
+        boolean temStatus = status != null && !status.isBlank();
+
+        StatusEmprestimo statusEmprestimo = null;
+
+        if (temStatus) {
+            statusEmprestimo = StatusEmprestimo.valueOf(status);
+        }
+
+        boolean temBusca = busca != null && !busca.isBlank();
+
+
+        if (temStatus && temBusca) {
+            emprestimos = emprestimoRepository.findByStatusAndUsuarioNomeContainingIgnoreCaseOrUsuarioMatriculaContainingIgnoreCase(
+                statusEmprestimo, busca, busca
+            );
+        } else if (temBusca) {
+            emprestimos = emprestimoRepository.findByUsuarioNomeContainingIgnoreCaseOrUsuarioMatriculaContainingIgnoreCase(
+                busca, busca
+            );
+        } else if (temStatus) {
+            emprestimos = emprestimoRepository.findByStatus(statusEmprestimo);
+        } else {
+            emprestimos = emprestimoRepository.findAll();
+        }
+
         return emprestimoMapper.toDTOList(emprestimos);
     }
 
@@ -46,8 +72,24 @@ public class EmprestimoService {
         return emprestimoMapper.toDTO(emprestimo);
     }
 
-    public List<EmprestimoDTO> buscarPorUsuario(Long idUsuario) {
-        return emprestimoMapper.toDTOList(emprestimoRepository.findByUsuarioIdUsuario(idUsuario));
+    public List<EmprestimoDTO> buscarPorUsuario(String status,Long idUsuario) {
+        List<Emprestimo> emprestimos;
+
+        boolean temStatus = status != null && !status.isBlank();
+
+        StatusEmprestimo statusEmprestimo = null;
+
+        if (temStatus) {
+            statusEmprestimo = StatusEmprestimo.valueOf(status);
+        }
+
+        if (temStatus) {
+            emprestimos = emprestimoRepository.findByUsuarioIdUsuarioAndStatus(idUsuario, statusEmprestimo);
+        } else {
+            emprestimos = emprestimoRepository.findByUsuarioIdUsuario(idUsuario);
+        }
+
+        return emprestimoMapper.toDTOList(emprestimos);
     }
 
     public EmprestimoDTO salvarEmprestimo(EmprestimoDTO emprestimoDTO) {

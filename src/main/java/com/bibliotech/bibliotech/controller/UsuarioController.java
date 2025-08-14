@@ -30,14 +30,19 @@ public class UsuarioController {
     }
 
     @GetMapping("/alunos")
-    public ResponseEntity<List<UsuarioDTO>> listarAlunos() {
-        List<UsuarioDTO> alunosDTO = usuarioService.listarAlunos();
+    public ResponseEntity<List<UsuarioDTO>> listarAlunos(
+        @RequestParam(required = false) String nome,
+        @RequestParam(required = false) String matricula
+    ) {
+        List<UsuarioDTO> alunosDTO = usuarioService.listarAlunos(nome, matricula);
         return ResponseEntity.ok().body(alunosDTO);
     }
 
     @GetMapping("/admins")
-    public ResponseEntity<List<UsuarioDTO>> listarAdmins() {
-        List<UsuarioDTO> alunosDTO = usuarioService.listarAdmins();
+    public ResponseEntity<List<UsuarioDTO>> listarAdmins(
+        @RequestParam(required = false) String nome
+    ) {
+        List<UsuarioDTO> alunosDTO = usuarioService.listarAdmins(nome);
         return ResponseEntity.ok().body(alunosDTO);
     }
 

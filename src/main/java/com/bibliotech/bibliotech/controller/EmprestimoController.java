@@ -3,8 +3,10 @@ package com.bibliotech.bibliotech.controller;
 import com.bibliotech.bibliotech.entity.Emprestimo;
 import com.bibliotech.bibliotech.entity.dto.EmprestimoDTO;
 import com.bibliotech.bibliotech.entity.dto.LivroDTO;
+import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
 import com.bibliotech.bibliotech.service.EmprestimoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +23,10 @@ public class EmprestimoController {
     private EmprestimoService emprestimoService;
 
     @GetMapping
-    public ResponseEntity<List<EmprestimoDTO>> listarEmprestimos() {
-        List<EmprestimoDTO> emprestimos = emprestimoService.listarEmprestimos();
+    public ResponseEntity<List<EmprestimoDTO>> listarEmprestimos(
+        @RequestParam(required = false) String status,
+        @RequestParam(required = false) String busca) {
+        List<EmprestimoDTO> emprestimos = emprestimoService.listarEmprestimos(status, busca);
         return ResponseEntity.ok().body(emprestimos);
     }
 
@@ -33,8 +37,10 @@ public class EmprestimoController {
     }
 
     @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<List<EmprestimoDTO>> buscarPorUsuario(@PathVariable Long idUsuario) {
-        List<EmprestimoDTO> emprestimos = emprestimoService.buscarPorUsuario(idUsuario);
+    public ResponseEntity<List<EmprestimoDTO>> buscarPorUsuario(
+        @RequestParam(required = false) String status,
+        @PathVariable Long idUsuario) {
+        List<EmprestimoDTO> emprestimos = emprestimoService.buscarPorUsuario(status, idUsuario);
         return ResponseEntity.ok(emprestimos);
     }
 

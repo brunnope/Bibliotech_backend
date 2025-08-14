@@ -13,7 +13,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -30,14 +29,43 @@ public class UsuarioService {
         return usuarioMapper.toDTOList(usuarios);
     }
 
-    public List<UsuarioDTO> listarAlunos() {
-        List<Usuario> usuarios = usuarioRepository.listarAlunos();
+    public List<UsuarioDTO> listarAlunos(String nome, String matricula) {
+        List<Usuario> usuarios;
+
+        boolean temNome = nome != null && !nome.isBlank();
+        boolean temMatricula = matricula != null && !matricula.isBlank();
+
+        if (temNome && temMatricula) {
+            usuarios = usuarioRepository.listarAlunosPorNomeEMatricula(
+                nome, matricula
+            );
+        } else if (temNome) {
+            usuarios = usuarioRepository.listarAlunosPorNome(
+                nome
+            );
+        } else if (temMatricula) {
+            usuarios = usuarioRepository.listarAlunosPorMatricula(matricula);
+        } else {
+            usuarios = usuarioRepository.listarAlunos();
+        }
+
         return usuarioMapper.toDTOList(usuarios);
     }
 
-    public List<UsuarioDTO> listarAdmins() {
-        List<Usuario> usuarios = usuarioRepository.listarAdmins();
-        return usuarioMapper.toDTOList(usuarios);
+    public List<UsuarioDTO> listarAdmins(String nome) {
+        List<Usuario> admins;
+
+        boolean temNome = nome != null && !nome.isBlank();
+
+        if (temNome) {
+            admins = usuarioRepository.listarAdminsPorNome(
+                    nome
+            );
+        } else {
+            admins = usuarioRepository.listarAdmins();
+        }
+
+        return usuarioMapper.toDTOList(admins);
     }
 
 
