@@ -20,8 +20,10 @@ public class ExemplarController {
     private ExemplarService exemplarService;
 
     @GetMapping
-    public ResponseEntity<List<ExemplarDTO>> listarExemplares() {
-        return ResponseEntity.ok().body(exemplarService.listarExemplares());
+    public ResponseEntity<List<ExemplarDTO>> listarExemplares(
+        @RequestParam(required = false) String disponibilidade,
+        @RequestParam(required = false) String titulo) {
+        return ResponseEntity.ok().body(exemplarService.listarExemplares(disponibilidade, titulo));
     }
 
     @GetMapping("/{id}")

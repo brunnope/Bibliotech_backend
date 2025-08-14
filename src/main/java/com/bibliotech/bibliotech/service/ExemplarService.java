@@ -32,10 +32,34 @@ public class ExemplarService {
     @Autowired
     private EditoraMapper editoraMapper;
 
-    public List<ExemplarDTO> listarExemplares() {
-        List<Exemplar> exemplares = exemplarRepository.findAll();
+    public List<ExemplarDTO> listarExemplares(String disponibilidade, String titulo) {
+        boolean temDisponibilidade = disponibilidade != null && !disponibilidade.isBlank();
+
+        DisponibilidadeExemplar disponibilidadeExemplar = null;
+
+        if (temDisponibilidade) {
+            disponibilidadeExemplar = DisponibilidadeExemplar.valueOf(disponibilidade.toUpperCase());
+        }
+        
+        boolean temTitulo = titulo != null && !titulo.isBlank();
+
+        List<Exemplar> exemplares;
+
+        if (temDisponibilidade && temTitulo) {
+            exemplares = exemplarRepository.findByDisponibilidadeAndLivroTituloContainingIgnoreCase(
+                    disponibilidadeExemplar, titulo
+            );
+        } else if (temDisponibilidade) {
+            exemplares = exemplarRepository.findByDisponibilidade(disponibilidadeExemplar);
+        } else if (temTitulo) {
+            exemplares = exemplarRepository.findByLivroTituloContainingIgnoreCase(titulo);
+        } else {
+            exemplares = exemplarRepository.findAll();
+        }
+
         return exemplarMapper.toDTOList(exemplares);
     }
+
 
     public ExemplarDTO obterExemplar(Long id) {
         Exemplar exemplar = exemplarRepository.findById(id).orElseThrow(

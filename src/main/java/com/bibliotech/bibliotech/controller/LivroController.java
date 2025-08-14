@@ -19,8 +19,11 @@ public class LivroController {
     private LivroService livroService;
 
     @GetMapping
-    public ResponseEntity<List<LivroDTO>> listarLivros() {
-        return ResponseEntity.ok().body(livroService.listarLivros());
+    public ResponseEntity<List<LivroDTO>> listarLivros(
+        @RequestParam(required = false) String tituloOuAutor,
+        @RequestParam(required = false) String categoria
+    ) {
+        return ResponseEntity.ok().body(livroService.listarLivros(tituloOuAutor, categoria));
     }
 
     @GetMapping("/{id}")

@@ -19,8 +19,26 @@ public class LivroService {
     @Autowired
     private LivroMapper livroMapper;
 
-    public List<LivroDTO> listarLivros() {
-        List<Livro> livros = livroRepository.findAll();
+    public List<LivroDTO> listarLivros(String tituloOuAutor, String categoria) {
+        List<Livro> livros;
+
+        boolean temTexto = tituloOuAutor != null && !tituloOuAutor.isBlank();
+        boolean temCategoria = categoria != null && !categoria.isBlank();
+
+        if (temTexto && temCategoria) {
+            livros = livroRepository.findByCategoriaAndTituloOrAutor(
+                categoria, tituloOuAutor
+            );
+        } else if (temTexto) {
+            livros = livroRepository.findByTituloContainingIgnoreCaseOrAutorContainingIgnoreCase(
+                tituloOuAutor, tituloOuAutor
+            );
+        } else if (temCategoria) {
+            livros = livroRepository.findByCategoriaContainingIgnoreCase(categoria);
+        } else {
+            livros = livroRepository.findAll();
+        }
+
         return livroMapper.toDTOList(livros);
     }
 
