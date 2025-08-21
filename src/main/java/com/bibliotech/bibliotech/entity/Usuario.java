@@ -1,15 +1,18 @@
 package com.bibliotech.bibliotech.entity;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 
 @Entity
 @Table(name = "tb_usuario")
-public class Usuario implements Serializable {
+public class Usuario implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
 
@@ -89,6 +92,22 @@ public class Usuario implements Serializable {
 
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(role);
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
@@ -99,4 +118,5 @@ public class Usuario implements Serializable {
     public int hashCode() {
         return Objects.hashCode(idUsuario);
     }
+
 }

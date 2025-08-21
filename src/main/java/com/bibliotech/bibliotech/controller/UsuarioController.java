@@ -59,17 +59,6 @@ public class UsuarioController {
     }
 
 
-    @PostMapping("/login")
-    public ResponseEntity<UsuarioDTO> login(@RequestBody LoginDTO loginDTO) {
-        try {
-            UsuarioDTO usuarioAutenticado = usuarioService.autenticar(loginDTO.getEmail(), loginDTO.getSenha());
-            return ResponseEntity.ok(usuarioAutenticado);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
-
-
     @PostMapping
     public ResponseEntity<UsuarioDTO> salvar(@RequestBody UsuarioComSenhaDTO usuarioDTO) {
         UsuarioDTO responseDTO = usuarioService.salvarUsuario(usuarioDTO);
