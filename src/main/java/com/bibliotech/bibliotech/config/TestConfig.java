@@ -94,7 +94,7 @@ public class TestConfig implements CommandLineRunner {
         livro.getExemplares().add(exemplar2);
 
         livroRepository.save(livro);
-
+        
         // Criando usuário com ROLE ADMINISTRADOR
         UsuarioComSenhaDTO usuario = new UsuarioComSenhaDTO();
         usuario.setNome("Usuário Admin");
@@ -112,6 +112,8 @@ public class TestConfig implements CommandLineRunner {
         usuario2.setMatricula("202315020028");
         usuario2.setRole(roleUser);
         usuarioService.salvarUsuario(usuario2);
+
+
 
         Usuario usuarioTeste = usuarioMapper.toEntity(usuarioService.obterUsuario(Long.parseLong("2")));
         Emprestimo emprestimo = new Emprestimo(

@@ -10,9 +10,11 @@ import com.bibliotech.bibliotech.repository.UsuarioRepository;
 import com.bibliotech.bibliotech.service.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
@@ -125,7 +127,7 @@ public class UsuarioService {
         entity.setMatricula(dto.getMatricula());
         entity.setNome(dto.getNome());
         entity.setEmail(dto.getEmail());
-        
+
         if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
             entity.setSenha(passwordEncoder.encode(dto.getSenha()));
         }
@@ -151,6 +153,10 @@ public class UsuarioService {
             throw new ResourceNotFoundException();
         }
         return usuarioMapper.toDTO(usuario);
+    }
+
+    public Boolean existeUsuario() {
+        return usuarioRepository.count() > 0;
     }
 
 }

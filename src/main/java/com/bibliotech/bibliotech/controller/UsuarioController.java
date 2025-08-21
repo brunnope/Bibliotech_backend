@@ -82,4 +82,9 @@ public class UsuarioController {
         usuarioService.excluirUsuario(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/existe")
+    public ResponseEntity<Boolean> existeUsuario() {
+        return ResponseEntity.ok(usuarioService.existeUsuario());
+    }
 }

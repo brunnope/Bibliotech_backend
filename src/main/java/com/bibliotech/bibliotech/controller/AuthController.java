@@ -31,9 +31,6 @@ public class AuthController {
         Authentication authentication = null;
         try {
 
-            System.out.println("Email recebido: " + loginDTO.getEmail());
-            System.out.println("Senha recebida: " + loginDTO.getSenha());
-
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getSenha()));
 

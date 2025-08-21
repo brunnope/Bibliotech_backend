@@ -23,9 +23,6 @@ public class UsuarioDetailsService implements UserDetailsService {
             throw  new UsernameNotFoundException("Usuário não encontrado com o e-mail: " + email);
         }
 
-        System.out.println("Usuário encontrado: " + usuario.getEmail());
-        System.out.println("Senha codificada no banco: " + usuario.getSenha());
-
         return usuario;
     }
 }
