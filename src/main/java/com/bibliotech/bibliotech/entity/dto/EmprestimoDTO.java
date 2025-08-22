@@ -3,6 +3,7 @@ package com.bibliotech.bibliotech.entity.dto;
 import com.bibliotech.bibliotech.entity.Exemplar;
 import com.bibliotech.bibliotech.entity.Usuario;
 import com.bibliotech.bibliotech.entity.enums.StatusEmprestimo;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 
